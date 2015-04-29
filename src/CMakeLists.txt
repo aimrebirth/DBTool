@@ -1,0 +1,63 @@
+#
+# Polygon-4 DB Tool
+#
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_target(version ALL
+    COMMAND git rev-list HEAD --count > version.h_
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h_ ${CMAKE_CURRENT_BINARY_DIR}/version.h.in
+)
+
+file(GLOB db_tool_src "*.cpp" "*.h")
+
+set(db_tool_src
+    ${db_tool_src}
+    
+    resources/qm.qrc
+    resources/rc.qrc
+)
+
+set(db_tool_rc
+    resources/rc.qrc
+)
+
+set(translate_src
+    ${db_tool_src}
+    ${MOCSrcs}
+    ${UISrcs}
+
+    resources/en_US.ts
+    resources/ru_RU.ts
+)
+
+set(translations_src_original ${CMAKE_CURRENT_SOURCE_DIR}/resources/qm.qrc)
+set(translations_src ${CMAKE_CURRENT_BINARY_DIR}/resources/qm.qrc)
+
+add_custom_command(
+    OUTPUT ${translations_src}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${translations_src_original} ${translations_src}
+    MAIN_DEPENDENCY ${translations_src_original}
+)
+
+#qt5_create_translation(qm_files ${translate_src})
+add_custom_target(translations DEPENDS ${qm_files})
+
+qt5_add_resources(db_tool_resources ${db_tool_rc})
+qt5_add_resources(db_tool_resources_qm ${translations_src})  
+
+add_executable(db_tool WIN32 ${db_tool_src} ${MOCSrcs} ${UISrcs} ${db_tool_resources} ${db_tool_resources_qm} resources/res.rc)
+target_link_libraries(db_tool DatabaseManager Qt5::Widgets ${Boost_LIBRARIES})
+add_dependencies(db_tool translations version)
+set_target_properties(db_tool PROPERTIES AUTOMOC True)
+
+if(WIN32)
+    target_link_libraries(db_tool
+        ${OPENGL_LIBRARIES}
+        ${Qt5PlatformSupport_LIBRARY}
+        ${qtharfbuzzng_LIBRARY}
+        Qt5::QWindowsIntegrationPlugin
+        imm32
+        winmm
+        Ws2_32)
+endif()
