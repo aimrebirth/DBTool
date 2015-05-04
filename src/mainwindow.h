@@ -31,6 +31,7 @@ namespace polygon4
     {
         class Storage;
     }
+    struct Table;
     class Database;
     struct DatabaseSchema;
 }
@@ -45,12 +46,15 @@ public:
 protected:
     void changeEvent(QEvent* event);
     void closeEvent(QCloseEvent *event);
+
+    void addToTreeView(QTreeWidgetItem *parent, const polygon4::Table &table);
     
 signals:
 private slots:
     void changeLanguage(QAction *action);
     void openDb();
     void saveDb();
+    void loadStorage();
     void currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void currentTableWidgetItemChanged(QTableWidgetItem *item);
     void tableWidgetStartEdiding(QWidget *editor, const QModelIndex &index);
@@ -67,6 +71,7 @@ private: /* ui functions */
     void createButtons();
     void createLayouts();
     void createWidgets();
+    void createToolBar();
     void setTitle();
     void setTableHeaders();
 
@@ -82,6 +87,7 @@ private: /* ui components */
     QActionGroup *languageActionGroup;
     QAction *openDbAction;
     QAction *saveDbAction;
+    QAction *reloadDbAction;
     QAction *exitAction;
     QAction *aboutAction;
 

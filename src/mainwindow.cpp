@@ -18,6 +18,7 @@
 #include <qsettings.h>
 #include <qtablewidget.h>
 #include <qtimer.h>
+#include <qtoolbar.h>
 #include <qtreewidget.h>
 
 #include <qapplication.h>
@@ -65,6 +66,7 @@ void MainWindow::setupUi()
     createLanguageMenu();
     createMenus();
     createButtons();
+    createToolBar();
     createLayouts();
 
     retranslateUi();
@@ -72,11 +74,15 @@ void MainWindow::setupUi()
 
 void MainWindow::createActions()
 {
-    openDbAction = new QAction(this);
+    openDbAction = new QAction(QIcon(":/icons/open.png"), 0, this);
     connect(openDbAction, SIGNAL(triggered()), SLOT(openDb()));
 
-    saveDbAction = new QAction(this);
+    saveDbAction = new QAction(QIcon(":/icons/save.png"), 0, this);
     connect(saveDbAction, SIGNAL(triggered()), SLOT(saveDb()));
+
+    reloadDbAction = new QAction(QIcon(":/icons/reload.png"), 0, this);
+    connect(reloadDbAction, SIGNAL(triggered()), SLOT(saveDb()));
+    connect(reloadDbAction, SIGNAL(triggered()), SLOT(loadStorage()));
 
     exitAction = new QAction(this);
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -144,6 +150,7 @@ void MainWindow::createMenus()
     fileMenu = new QMenu(this);
     fileMenu->addAction(openDbAction);
     fileMenu->addAction(saveDbAction);
+    fileMenu->addAction(reloadDbAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
 
@@ -182,6 +189,16 @@ void MainWindow::createLayouts()
     setCentralWidget(centralWidget);
 }
 
+void MainWindow::createToolBar()
+{
+    QToolBar *toolBar = new QToolBar(this);
+    toolBar->addAction(openDbAction);
+    toolBar->addAction(saveDbAction);
+    toolBar->addAction(reloadDbAction);
+    toolBar->addSeparator();
+    addToolBar(toolBar);
+}
+
 void MainWindow::createWidgets()
 {
     signalledItemDelegate = new QSignalledItemDelegate;
@@ -212,6 +229,7 @@ void MainWindow::retranslateUi()
     fileMenu->setTitle(tr("File"));
     openDbAction->setText(tr("Open database..."));
     saveDbAction->setText(tr("Save database..."));
+    reloadDbAction->setText(tr("Reload database..."));
     exitAction->setText(tr("Exit"));
     settingsMenu->setTitle(tr("Settings"));
     languageMenu->setTitle(tr("Language"));
@@ -265,27 +283,49 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::openDb()
 {
-    QSettings settings;
-    QString dir = settings.value("openDir", ".").toString();
+    std::string filename = "h:\\Games\\Epic Games\\Projects\\Polygon4\\Mods\\db.sqlite";
 
-    QString fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
-    if (fn == QString())
-        return;
+    if (filename.empty())
+    {
+        QSettings settings;
+        QString dir = settings.value("openDir", ".").toString();
 
-    settings.setValue("openDir", QFileInfo(fn).absoluteDir().absolutePath());
+        QString fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+        if (fn == QString())
+            return;
 
-    QByteArray ba = fn.toLatin1();
-    std::string filename = ba.data();
+        settings.setValue("openDir", QFileInfo(fn).absoluteDir().absolutePath());
+
+        QByteArray ba = fn.toLatin1();
+        filename = ba.data();
+    }
 
     try
     {
         database = std::make_shared<polygon4::Database>(filename);
+    }
+    catch (std::exception e)
+    {
+        QMessageBox::critical(this, tr("Critical error while opening database!"), e.what());
+        return;
+    }
+
+    loadStorage();
+}
+
+void MainWindow::loadStorage()
+{
+    if (!database)
+        return;
+
+    try
+    {
         storage = polygon4::initStorage(database);
         storage->load();
     }
     catch (std::exception e)
     {
-        QMessageBox::critical(this, "Critical error while opening database!", e.what());
+        QMessageBox::critical(this, tr("Critical error while loading the storage!"), e.what());
         return;
     }
 
@@ -297,81 +337,84 @@ void MainWindow::openDb()
     database->getSchema(schema);
         
     treeWidget->clear();
-    QList<QTreeWidgetItem *> items;
+    auto parent = treeWidget->invisibleRootItem();
     for (auto &tbl : schema->tables)
     {
-        auto item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(tbl.first.c_str()));
-        auto type = polygon4::detail::getTableType(tbl.first);
-        switch (type)
-        {
-            using namespace polygon4::detail;
-        case EObjectType::Building:
-            ADD_TABLE_TO_VIEW(Building, buildings, name.ptr->get()); } }
-            break;
-        case EObjectType::Clan:
-            ADD_TABLE_TO_VIEW(Clan, clans, name.ptr->get()); } }
-            break;
-        case EObjectType::Configuration:
-            ADD_TABLE_TO_VIEW(Configuration, configurations, name.ptr->get()); } }
-            break;
-        case EObjectType::Equipment:
-            ADD_TABLE_TO_VIEW(Equipment, equipments, name.ptr->get()); } }
-            break;
-        case EObjectType::Glider:
-            ADD_TABLE_TO_VIEW(Glider, gliders, name.ptr->get()); } }
-            break;
-        case EObjectType::Good:
-            ADD_TABLE_TO_VIEW(Good, goods, name.ptr->get()); } }
-            break;
-        case EObjectType::Map:
-            ADD_TABLE_TO_VIEW(Map, maps, name.ptr->get()); } }
-            break;
-        case EObjectType::Mechanoid:
-            ADD_TABLE_TO_VIEW(Mechanoid, mechanoids, name); } }
-            break;
-        case EObjectType::Modification:
-            ADD_TABLE_TO_VIEW(Modification, modifications, name); } }
-            break;
-        case EObjectType::Modificator:
-            ADD_TABLE_TO_VIEW(Modificator, modificators, name); } }
-            break;
-        case EObjectType::Object:
-            ADD_TABLE_TO_VIEW(Object, objects, name); } }
-            break;
-        case EObjectType::Player:
-            for (auto &player : storage->players)
-            {
-                auto i = new QTreeWidgetItem(item, QStringList(tr("Player #") + QString::number(player.first)));
-                i->setData(0, Qt::UserRole, (uint64_t)player.second.get());
-            }
-            break;
-        case EObjectType::Projectile:
-            ADD_TABLE_TO_VIEW(Projectile, projectiles, name.ptr->get()); } }
-            break;
-        case EObjectType::Quest:
-            ADD_TABLE_TO_VIEW(Quest, quests, name.ptr->get()); } }
-            break;
-        case EObjectType::Save:
-            ADD_TABLE_TO_VIEW(Save, saves, name); } }
-            break;
-        case EObjectType::String:
-            for (auto &str : storage->strings)
-            {
-                QString s = QString("%1. %2").arg(str.first).arg(QString::fromStdWString(str.second->get()));
-                auto i = new QTreeWidgetItem(item, QStringList(s));
-                i->setData(0, Qt::UserRole, (uint64_t)str.second.get());
-            }
-            break;
-        case EObjectType::Weapon:
-            ADD_TABLE_TO_VIEW(Weapon, weapons, name.ptr->get()); } }
-            break;
-        default:
-            delete item;
-            continue;
-        }
-        items.append(item);
+        addToTreeView(parent, tbl.second);
     }
-    treeWidget->insertTopLevelItems(0, items);
+}
+
+void MainWindow::addToTreeView(QTreeWidgetItem *parent, const polygon4::Table &table)
+{
+    auto item = new QTreeWidgetItem(parent, QStringList(table.name.c_str()));
+    auto type = polygon4::detail::getTableType(table.name);
+    switch (type)
+    {
+        using namespace polygon4::detail;
+    case EObjectType::Building:
+        ADD_TABLE_TO_VIEW(Building, buildings, name.ptr->get()); } }
+        break;
+    case EObjectType::Clan:
+        ADD_TABLE_TO_VIEW(Clan, clans, name.ptr->get()); } }
+        break;
+    case EObjectType::Configuration:
+        ADD_TABLE_TO_VIEW(Configuration, configurations, name.ptr->get()); } }
+        break;
+    case EObjectType::Equipment:
+        ADD_TABLE_TO_VIEW(Equipment, equipments, name.ptr->get()); } }
+        break;
+    case EObjectType::Glider:
+        ADD_TABLE_TO_VIEW(Glider, gliders, name.ptr->get()); } }
+        break;
+    case EObjectType::Good:
+        ADD_TABLE_TO_VIEW(Good, goods, name.ptr->get()); } }
+        break;
+    case EObjectType::Map:
+        ADD_TABLE_TO_VIEW(Map, maps, name.ptr->get()); } }
+        break;
+    case EObjectType::Mechanoid:
+        ADD_TABLE_TO_VIEW(Mechanoid, mechanoids, name); } }
+        break;
+    case EObjectType::Modification:
+        ADD_TABLE_TO_VIEW(Modification, modifications, name); } }
+        break;
+    case EObjectType::Modificator:
+        ADD_TABLE_TO_VIEW(Modificator, modificators, name); } }
+        break;
+    case EObjectType::Object:
+        ADD_TABLE_TO_VIEW(Object, objects, name); } }
+        break;
+    case EObjectType::Player:
+        for (auto &player : storage->players)
+        {
+            auto i = new QTreeWidgetItem(item, QStringList(tr("Player #") + QString::number(player.first)));
+            i->setData(0, Qt::UserRole, (uint64_t)player.second.get());
+        }
+        break;
+    case EObjectType::Projectile:
+        ADD_TABLE_TO_VIEW(Projectile, projectiles, name.ptr->get()); } }
+        break;
+    case EObjectType::Quest:
+        ADD_TABLE_TO_VIEW(Quest, quests, name.ptr->get()); } }
+        break;
+    case EObjectType::Save:
+        ADD_TABLE_TO_VIEW(Save, saves, name); } }
+        break;
+    case EObjectType::String:
+        for (auto &str : storage->strings)
+        {
+            QString s = QString("%1. %2").arg(str.first).arg(QString::fromStdWString(str.second->get()));
+            auto i = new QTreeWidgetItem(item, QStringList(s));
+            i->setData(0, Qt::UserRole, (uint64_t)str.second.get());
+        }
+        break;
+    case EObjectType::Weapon:
+        ADD_TABLE_TO_VIEW(Weapon, weapons, name.ptr->get()); } }
+        break;
+    default:
+        delete item;
+        break;
+    }
 }
 
 void MainWindow::saveDb()

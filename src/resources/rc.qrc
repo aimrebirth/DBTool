@@ -1,5 +1,8 @@
-<!DOCTYPE RCC><RCC version="1.0">
+<RCC>
     <qresource prefix="/icons">
         <file>polygon4.ico</file>
+        <file>open.png</file>
+        <file>save.png</file>
+        <file>reload.png</file>
     </qresource>
 </RCC>
