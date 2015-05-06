@@ -22,8 +22,10 @@ set(db_tool_rc
     resources/rc.qrc
 )
 
+file(GLOB_RECURSE dbmgr_src "../dep/dbmgr/src/*")
 set(translate_src
     ${db_tool_src}
+    ${dbmgr_src}
     ${MOCSrcs}
     ${UISrcs}
 

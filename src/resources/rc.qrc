@@ -4,5 +4,7 @@
         <file>open.png</file>
         <file>save.png</file>
         <file>reload.png</file>
+        <file>minus.png</file>
+        <file>plus.png</file>
     </qresource>
 </RCC>

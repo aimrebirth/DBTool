@@ -2,6 +2,7 @@
 
 #include <qaction.h>
 #include <qboxlayout.h>
+#include <qcombobox.h>
 #include <qfiledialog.h>
 #include <qheaderview.h>
 #include <qimage.h>
@@ -28,30 +29,35 @@
 #include <Polygon4/DatabaseSchema.h>
 #include <Polygon4/Helpers.h>
 #include <Polygon4/Storage.h>
+#include <Polygon4/Types.h>
 
 #include "version.h"
 
 #include "qlabeledlistwidget.h"
 #include "qsignalleditemdelegate.h"
 
-#define ADD_TABLE_TO_VIEW(type, vars, var) \
-    { \
-    std::map<polygon4::String, polygon4::Ptr<polygon4::detail::type>> __vars; \
-    for (auto &v : storage->vars) \
-        __vars[v.second->var] = v.second; \
-    for (auto &v : __vars) \
-    { \
-        auto i = new QTreeWidgetItem(item, QStringList(QString::fromStdWString(v.first))); \
-        i->setData(0, Qt::UserRole, (uint64_t)v.second.get())
-
 QTranslator appTranslator;
+
+void updateText(QTreeWidgetItem *item)
+{
+    using namespace polygon4::detail;
+
+    for (int i = 0; i < item->childCount(); i++)
+    {
+        auto child = item->child(i);
+        IObject *data = (IObject *)child->data(0, Qt::UserRole).toULongLong();
+        if ((size_t)data > (1 << 20))
+            child->setText(0, QString::fromStdWString(data->getName().wstring()));
+        updateText(child);
+    }
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setupUi();
     
-    setMinimumSize(600, 400);
+    setMinimumSize(800, 600);
     resize(minimumSizeHint());
 }
 
@@ -84,6 +90,12 @@ void MainWindow::createActions()
     connect(reloadDbAction, SIGNAL(triggered()), SLOT(saveDb()));
     connect(reloadDbAction, SIGNAL(triggered()), SLOT(loadStorage()));
 
+    addRecordAction = new QAction(QIcon(":/icons/plus.png"), 0, this);
+    connect(addRecordAction, SIGNAL(triggered()), SLOT(addRecord()));
+
+    deleteRecordAction = new QAction(QIcon(":/icons/minus.png"), 0, this);
+    connect(deleteRecordAction, SIGNAL(triggered()), SLOT(deleteRecord()));
+
     exitAction = new QAction(this);
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
@@ -91,7 +103,7 @@ void MainWindow::createActions()
     connect(aboutAction, &QAction::triggered, [=]
     {
         QMessageBox::information(this, tr("Polygon-4 DB Tool"),
-            tr("Author: lzwdgc") + ", 2015\n" + tr("Version") +
+            tr("Author") + ": lzwdgc" + ", 2015\n" + tr("Version") +
             QString(": %1.%2.%3.%4")
             .arg(DBTOOL_VERSION_MAJOR)
             .arg(DBTOOL_VERSION_MINOR)
@@ -196,6 +208,8 @@ void MainWindow::createToolBar()
     toolBar->addAction(saveDbAction);
     toolBar->addAction(reloadDbAction);
     toolBar->addSeparator();
+    toolBar->addAction(addRecordAction);
+    toolBar->addAction(deleteRecordAction);
     addToolBar(toolBar);
 }
 
@@ -211,6 +225,7 @@ void MainWindow::createWidgets()
     tableWidget = new QTableWidget(this);
     tableWidget->setColumnCount(3);
     tableWidget->horizontalHeader()->setVisible(false);
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Fixed);
     tableWidget->verticalHeader()->setDefaultSectionSize(24);
@@ -231,6 +246,8 @@ void MainWindow::retranslateUi()
     saveDbAction->setText(tr("Save database..."));
     reloadDbAction->setText(tr("Reload database..."));
     exitAction->setText(tr("Exit"));
+    addRecordAction->setText(tr("Add record"));
+    deleteRecordAction->setText(tr("Delete record"));
     settingsMenu->setTitle(tr("Settings"));
     languageMenu->setTitle(tr("Language"));
     helpMenu->setTitle(tr("Help"));
@@ -264,9 +281,15 @@ void MainWindow::changeLanguage(QAction *action)
     QApplication::removeTranslator(&appTranslator);
     if (action->data() != QString())
     {
+        QString language = action->data().toString();
         QApplication::installTranslator(&appTranslator);
-        appTranslator.load(action->data().toString());
+        appTranslator.load(language);
+        if (language.indexOf("ru") != -1)
+            polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::ru);
     }
+    else
+        polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::en);
+    reloadTreeView();
 }
 
 void MainWindow::changeEvent(QEvent* event)
@@ -283,21 +306,21 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::openDb()
 {
-    std::string filename = "h:\\Games\\Epic Games\\Projects\\Polygon4\\Mods\\db.sqlite";
+    std::string filename
+#ifndef NDEBUG
+        = "h:\\Games\\Epic Games\\Projects\\Polygon4\\Mods\\db.sqlite"
+#endif
+        ;
 
     if (filename.empty())
     {
         QSettings settings;
         QString dir = settings.value("openDir", ".").toString();
-
         QString fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
         if (fn == QString())
             return;
-
         settings.setValue("openDir", QFileInfo(fn).absoluteDir().absolutePath());
-
-        QByteArray ba = fn.toLatin1();
-        filename = ba.data();
+        filename = fn.toStdString();
     }
 
     try
@@ -335,86 +358,15 @@ void MainWindow::loadStorage()
     delete schema;
     schema = new polygon4::DatabaseSchema;
     database->getSchema(schema);
-        
-    treeWidget->clear();
-    auto parent = treeWidget->invisibleRootItem();
-    for (auto &tbl : schema->tables)
-    {
-        addToTreeView(parent, tbl.second);
-    }
+
+    reloadTreeView();
 }
 
-void MainWindow::addToTreeView(QTreeWidgetItem *parent, const polygon4::Table &table)
+void MainWindow::reloadTreeView()
 {
-    auto item = new QTreeWidgetItem(parent, QStringList(table.name.c_str()));
-    auto type = polygon4::detail::getTableType(table.name);
-    switch (type)
-    {
-        using namespace polygon4::detail;
-    case EObjectType::Building:
-        ADD_TABLE_TO_VIEW(Building, buildings, name.ptr->get()); } }
-        break;
-    case EObjectType::Clan:
-        ADD_TABLE_TO_VIEW(Clan, clans, name.ptr->get()); } }
-        break;
-    case EObjectType::Configuration:
-        ADD_TABLE_TO_VIEW(Configuration, configurations, name.ptr->get()); } }
-        break;
-    case EObjectType::Equipment:
-        ADD_TABLE_TO_VIEW(Equipment, equipments, name.ptr->get()); } }
-        break;
-    case EObjectType::Glider:
-        ADD_TABLE_TO_VIEW(Glider, gliders, name.ptr->get()); } }
-        break;
-    case EObjectType::Good:
-        ADD_TABLE_TO_VIEW(Good, goods, name.ptr->get()); } }
-        break;
-    case EObjectType::Map:
-        ADD_TABLE_TO_VIEW(Map, maps, name.ptr->get()); } }
-        break;
-    case EObjectType::Mechanoid:
-        ADD_TABLE_TO_VIEW(Mechanoid, mechanoids, name); } }
-        break;
-    case EObjectType::Modification:
-        ADD_TABLE_TO_VIEW(Modification, modifications, name); } }
-        break;
-    case EObjectType::Modificator:
-        ADD_TABLE_TO_VIEW(Modificator, modificators, name); } }
-        break;
-    case EObjectType::Object:
-        ADD_TABLE_TO_VIEW(Object, objects, name); } }
-        break;
-    case EObjectType::Player:
-        for (auto &player : storage->players)
-        {
-            auto i = new QTreeWidgetItem(item, QStringList(tr("Player #") + QString::number(player.first)));
-            i->setData(0, Qt::UserRole, (uint64_t)player.second.get());
-        }
-        break;
-    case EObjectType::Projectile:
-        ADD_TABLE_TO_VIEW(Projectile, projectiles, name.ptr->get()); } }
-        break;
-    case EObjectType::Quest:
-        ADD_TABLE_TO_VIEW(Quest, quests, name.ptr->get()); } }
-        break;
-    case EObjectType::Save:
-        ADD_TABLE_TO_VIEW(Save, saves, name); } }
-        break;
-    case EObjectType::String:
-        for (auto &str : storage->strings)
-        {
-            QString s = QString("%1. %2").arg(str.first).arg(QString::fromStdWString(str.second->get()));
-            auto i = new QTreeWidgetItem(item, QStringList(s));
-            i->setData(0, Qt::UserRole, (uint64_t)str.second.get());
-        }
-        break;
-    case EObjectType::Weapon:
-        ADD_TABLE_TO_VIEW(Weapon, weapons, name.ptr->get()); } }
-        break;
-    default:
-        delete item;
-        break;
-    }
+    treeWidget->clear();
+    storage->printQtTreeView(treeWidget->invisibleRootItem());
+    treeWidget->invisibleRootItem()->sortChildren(0, Qt::AscendingOrder);
 }
 
 void MainWindow::saveDb()
@@ -437,7 +389,8 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
 {
     using namespace polygon4::detail;
 
-    if (!current || current->parent() == 0)
+    tableWidget->setCurrentCell(-1, -1);
+    if (!current || !current->parent() || !current->data(0, Qt::UserRole).toULongLong())
     {
         tableWidget->setRowCount(0);
         tableWidget->horizontalHeader()->setVisible(false);
@@ -452,6 +405,8 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     auto &table = schema->tables[polygon4::detail::getTableNameByType(data->getType())];
     tableWidget->setRowCount(table.columns.size());
+    for (size_t i = 0; i < table.columns.size(); i++)
+        tableWidget->removeCellWidget(i, 2);
     for (auto &col : table.columns)
     {
         bool disabled = false;
@@ -470,7 +425,44 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
-        item = new QTableWidgetItem((const char *)data->getVariableString(col.second.id));
+        auto value = data->getVariableString(col.second.id);
+        if (col.second.fk)
+        {
+            static std::map<void *, Ptr<IObject>> ptr_storage;
+            ptr_storage.clear();
+
+            auto m = storage->getOrderedMap(polygon4::detail::getTableType(col.second.fk->table_name));
+            QComboBox *cb = new QComboBox;
+            bool found = false;
+            for (auto &v : m)
+            {
+                ptr_storage[v.second.get()] = v.second;
+                cb->addItem(QString::fromStdWString(v.first), (uint64_t)v.second.get());
+                if (value == v.second->getName())
+                {
+                    cb->setCurrentIndex(cb->count() - 1);
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                cb->addItem("");
+                cb->setCurrentIndex(cb->count() - 1);
+            }
+            connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, col, this](int index)
+            {
+                IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
+                IObject *cb_data = (IObject *)cb->currentData().toULongLong();
+                if (cb_data)
+                {
+                    data->setVariableString(col.second.id, "", ptr_storage[cb_data]);
+                    updateText(treeWidget->invisibleRootItem());
+                }
+            });
+            tableWidget->setCellWidget(col.second.id, 2, cb);
+            continue;
+        }
+        item = new QTableWidgetItem(QString::fromStdWString(value));
         item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
         tableWidget->setItem(col.second.id, 2, item);
         item->setData(Qt::UserRole, (uint64_t)&col.second);
@@ -532,4 +524,34 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
 
     dataChanged = true;
     setTitle();
+
+    updateText(treeWidget->invisibleRootItem());
 }
+
+void MainWindow::addRecord()
+{
+    auto item = treeWidget->currentItem();
+    if (!item)
+        return;
+    while (item->parent())
+        item = item->parent();
+    auto new_item = storage->addRecord(item);
+    treeWidget->setCurrentItem(new_item);
+
+    dataChanged = true;
+    setTitle();
+}
+
+void MainWindow::deleteRecord()
+{
+    auto item = treeWidget->currentItem();
+    if (!item || !item->parent())
+        return;
+    while (item->parent()->parent())
+        item = item->parent();
+    storage->deleteRecord(item);
+
+    dataChanged = true;
+    setTitle();
+}
+

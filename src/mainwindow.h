@@ -46,8 +46,6 @@ public:
 protected:
     void changeEvent(QEvent* event);
     void closeEvent(QCloseEvent *event);
-
-    void addToTreeView(QTreeWidgetItem *parent, const polygon4::Table &table);
     
 signals:
 private slots:
@@ -55,10 +53,13 @@ private slots:
     void openDb();
     void saveDb();
     void loadStorage();
+    void reloadTreeView();
     void currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void currentTableWidgetItemChanged(QTableWidgetItem *item);
     void tableWidgetStartEdiding(QWidget *editor, const QModelIndex &index);
     void tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index);
+    void addRecord();
+    void deleteRecord();
 
 private:
     void setupUi();
@@ -90,6 +91,8 @@ private: /* ui components */
     QAction *reloadDbAction;
     QAction *exitAction;
     QAction *aboutAction;
+    QAction *addRecordAction;
+    QAction *deleteRecordAction;
 
     QHBoxLayout *mainLayout;
     QHBoxLayout *leftLayout;

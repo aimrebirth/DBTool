@@ -44,6 +44,7 @@ else()
 endif(WIN32)
 
 find_package(Boost 1.54 REQUIRED filesystem system)
+find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
@@ -66,6 +67,8 @@ endif()
 #
 ###############################################################################
 
+add_definitions(-DUSE_QT)
+
 if (WIN32)
     if (MSVC)
         set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
@@ -85,8 +88,10 @@ endif()
 ###############################################################################
 
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${Qt5Multimedia_INCLUDE_DIRS})
+
+include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Multimedia_INCLUDE_DIRS})
 
 link_directories(${Boost_LIBRARY_DIRS})
 
