@@ -15,8 +15,12 @@
 #include <qmenubar.h>
 #include <qmessagebox.h>
 #include <qplaintextedit.h>
+#include <qprogressbar.h>
+#include <qprogressdialog.h>
 #include <qscrollbar.h>
 #include <qsettings.h>
+#include <qsizegrip.h>
+#include <qstatusbar.h>
 #include <qtablewidget.h>
 #include <qtimer.h>
 #include <qtoolbar.h>
@@ -38,6 +42,13 @@
 
 QTranslator appTranslator;
 
+const int tableWidgetColumnCount = 3;
+
+bool isPointer(uint64_t data)
+{
+    return data > (1 << 20);
+}
+
 void updateText(QTreeWidgetItem *item)
 {
     using namespace polygon4::detail;
@@ -46,10 +57,27 @@ void updateText(QTreeWidgetItem *item)
     {
         auto child = item->child(i);
         IObject *data = (IObject *)child->data(0, Qt::UserRole).toULongLong();
-        if ((size_t)data > (1 << 20))
+        if (isPointer((size_t)data))
             child->setText(0, QString::fromStdWString(data->getName().wstring()));
         updateText(child);
     }
+}
+
+QString getColumnTypeString(polygon4::ColumnType type)
+{
+    using polygon4::ColumnType;
+    switch (type)
+    {
+    case ColumnType::Integer:
+        return QCoreApplication::translate("DB Types", "INTEGER");
+    case ColumnType::Real:
+        return QCoreApplication::translate("DB Types", "REAL");
+    case ColumnType::Text:
+        return QCoreApplication::translate("DB Types", "TEXT");
+    case ColumnType::Blob:
+        return QCoreApplication::translate("DB Types", "BLOB");
+    }
+    return "";
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -57,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi();
     
-    setMinimumSize(800, 600);
+    setMinimumSize(1000, 600);
     resize(minimumSizeHint());
 }
 
@@ -117,7 +145,6 @@ void MainWindow::createLanguageMenu()
     languageMenu = new QMenu(this);
     QAction *defaultApplicationLanguage = languageMenu->addAction("English");
     defaultApplicationLanguage->setCheckable(true);
-    defaultApplicationLanguage->setData(QString());
     defaultApplicationLanguage->setChecked(true);
     languageActionGroup = new QActionGroup(this);
     languageActionGroup->addAction(defaultApplicationLanguage);
@@ -136,7 +163,10 @@ void MainWindow::createLanguageMenu()
 
         QString language = translator.translate("MainWindow", "English");
         if (language == "English")
+        {
+            defaultApplicationLanguage->setData(filename);
             continue;
+        }
         QString defaultLanguage = translator.translate("MainWindow", "Default application language",
             "Set this variable to \"1\" to default choose current language");
 
@@ -210,6 +240,7 @@ void MainWindow::createToolBar()
     toolBar->addSeparator();
     toolBar->addAction(addRecordAction);
     toolBar->addAction(deleteRecordAction);
+    toolBar->addSeparator();
     addToolBar(toolBar);
 }
 
@@ -223,20 +254,25 @@ void MainWindow::createWidgets()
     treeWidget->setMaximumWidth(300);
 
     tableWidget = new QTableWidget(this);
-    tableWidget->setColumnCount(3);
+    tableWidget->setColumnCount(tableWidgetColumnCount);
     tableWidget->horizontalHeader()->setVisible(false);
     tableWidget->horizontalHeader()->setStretchLastSection(true);
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Fixed);
     tableWidget->verticalHeader()->setDefaultSectionSize(24);
     tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    tableWidget->setItemDelegateForColumn(2, signalledItemDelegate);
+    tableWidget->setItemDelegateForColumn(tableWidgetColumnCount - 1, signalledItemDelegate);
 
     connect(treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(currentTreeWidgetItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
     connect(tableWidget, SIGNAL(itemClicked(QTableWidgetItem *)), SLOT(currentTableWidgetItemChanged(QTableWidgetItem *)));
 
     connect(signalledItemDelegate, SIGNAL(startEditing(QWidget *, const QModelIndex &)), SLOT(tableWidgetStartEdiding(QWidget *, const QModelIndex &)));
     connect(signalledItemDelegate, SIGNAL(endEditing(QWidget *, QAbstractItemModel *, const QModelIndex &)), SLOT(tableWidgetEndEdiding(QWidget *, QAbstractItemModel *, const QModelIndex &)));
+    
+    statusBar = new QStatusBar(this);
+    statusBar->setSizeGripEnabled(false);
+    setStatusBar(statusBar);
 }
 
 void MainWindow::retranslateUi()
@@ -255,12 +291,14 @@ void MainWindow::retranslateUi()
     
     setTableHeaders();
     setTitle();
+
+    polygon4::detail::retranslateFieldNames();
 }
 
 void MainWindow::setTableHeaders()
 {
     QStringList headers;
-    headers << tr("Field name") << tr("Type") << tr("Value");
+    headers << /*tr("Field") << */tr("Name") << tr("Type") << tr("Value");
     tableWidget->setHorizontalHeaderLabels(headers);
 }
 
@@ -286,6 +324,8 @@ void MainWindow::changeLanguage(QAction *action)
         appTranslator.load(language);
         if (language.indexOf("ru") != -1)
             polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::ru);
+        else if (language.indexOf("en") != -1)
+            polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::en);
     }
     else
         polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::en);
@@ -344,7 +384,22 @@ void MainWindow::loadStorage()
     try
     {
         storage = polygon4::initStorage(database);
-        storage->load();
+
+        QProgressDialog progress(tr("Opening database..."), "Abort", 0, 100, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+        progress.setFixedWidth(400);
+        progress.setFixedHeight(75);
+        progress.setCancelButton(0);
+        progress.setValue(0);
+        progress.setWindowModality(Qt::WindowModal);
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+
+        auto f = [&](double p)
+        {
+            progress.setValue((int)p);
+            QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        };
+
+        storage->load(f);
     }
     catch (std::exception e)
     {
@@ -373,8 +428,24 @@ void MainWindow::saveDb()
 {
     try
     {
-        if (storage)
-            storage->save();
+        if (!storage)
+            return;
+
+        QProgressDialog progress(tr("Saving database..."), "Abort", 0, 100, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+        progress.setFixedWidth(400);
+        progress.setFixedHeight(75);
+        progress.setCancelButton(0);
+        progress.setValue(0);
+        progress.setWindowModality(Qt::WindowModal);
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+
+        auto f = [&](double p)
+        {
+            progress.setValue((int)p);
+            QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        };
+
+        storage->save(f);
         dataChanged = false;
         setTitle();
     }
@@ -390,7 +461,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     using namespace polygon4::detail;
 
     tableWidget->setCurrentCell(-1, -1);
-    if (!current || !current->parent() || !current->data(0, Qt::UserRole).toULongLong())
+    if (!current || !current->parent() || !isPointer(current->data(0, Qt::UserRole).toULongLong()))
     {
         tableWidget->setRowCount(0);
         tableWidget->horizontalHeader()->setVisible(false);
@@ -406,37 +477,46 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     auto &table = schema->tables[polygon4::detail::getTableNameByType(data->getType())];
     tableWidget->setRowCount(table.columns.size());
     for (size_t i = 0; i < table.columns.size(); i++)
-        tableWidget->removeCellWidget(i, 2);
+        tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
     for (auto &col : table.columns)
     {
+        int col_id = 0;
+        QTableWidgetItem *item;
+
         bool disabled = false;
         if (col.second.id == 0 && col.second.name == "id" && col.second.type == polygon4::ColumnType::Integer)
             disabled = true;
 
-        auto item = new QTableWidgetItem(col.first.c_str());
+        item = new QTableWidgetItem(getFieldName(col.second.name));
         item->setFlags(Qt::ItemIsEnabled);
-        tableWidget->setItem(col.second.id, 0, item);
+        tableWidget->setItem(col.second.id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
+        
+        //item = new QTableWidgetItem(col.first.c_str());
+        //item->setFlags(Qt::NoItemFlags);
+        //tableWidget->setItem(col.second.id, col_id++, item);
+        //if (disabled)
+        //    item->setFlags(Qt::NoItemFlags);
 
-        item = new QTableWidgetItem(getColumnTypeString(col.second.type).c_str());
+        item = new QTableWidgetItem(col.second.fk ? "" : getColumnTypeString(col.second.type));
         item->setFlags(Qt::NoItemFlags);
-        tableWidget->setItem(col.second.id, 1, item);
+        tableWidget->setItem(col.second.id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
         auto value = data->getVariableString(col.second.id);
         if (col.second.fk)
         {
-            static std::map<void *, Ptr<IObject>> ptr_storage;
-            ptr_storage.clear();
+            //static std::map<void *, Ptr<IObject>> ptr_storage;
+            //ptr_storage.clear();
 
             auto m = storage->getOrderedMap(polygon4::detail::getTableType(col.second.fk->table_name));
             QComboBox *cb = new QComboBox;
             bool found = false;
             for (auto &v : m)
             {
-                ptr_storage[v.second.get()] = v.second;
+                //ptr_storage[v.second.get()] = v.second;
                 cb->addItem(QString::fromStdWString(v.first), (uint64_t)v.second.get());
                 if (value == v.second->getName())
                 {
@@ -455,16 +535,20 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 IObject *cb_data = (IObject *)cb->currentData().toULongLong();
                 if (cb_data)
                 {
-                    data->setVariableString(col.second.id, "", ptr_storage[cb_data]);
+                    //if (ptr_storage.find(cb_data) != ptr_storage.end())
+                    //    data->setVariableString(col.second.id, "", ptr_storage[cb_data]);
+                    //else
+                    //    throw "not found";
+                    data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
                     updateText(treeWidget->invisibleRootItem());
                 }
             });
-            tableWidget->setCellWidget(col.second.id, 2, cb);
+            tableWidget->setCellWidget(col.second.id, col_id, cb);
             continue;
         }
         item = new QTableWidgetItem(QString::fromStdWString(value));
         item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
-        tableWidget->setItem(col.second.id, 2, item);
+        tableWidget->setItem(col.second.id, col_id++, item);
         item->setData(Qt::UserRole, (uint64_t)&col.second);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
@@ -473,7 +557,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
 
 void MainWindow::currentTableWidgetItemChanged(QTableWidgetItem *item)
 {
-    if (!item || item->row() == -1 || item->column() != 2)
+    if (!item || item->row() == -1 || item->column() != tableWidgetColumnCount - 1)
         return;
     currentTableWidgetItem = item;
 }
@@ -533,10 +617,19 @@ void MainWindow::addRecord()
     auto item = treeWidget->currentItem();
     if (!item)
         return;
-    while (item->parent())
-        item = item->parent();
+    while (1)
+    {
+        auto data = item->data(0, Qt::UserRole).toULongLong();
+        if (data && isPointer(data))
+            item = item->parent();
+        else
+            break;
+    }
     auto new_item = storage->addRecord(item);
+    if (!new_item)
+        return;
     treeWidget->setCurrentItem(new_item);
+    new_item->setExpanded(true);
 
     dataChanged = true;
     setTitle();
@@ -545,10 +638,11 @@ void MainWindow::addRecord()
 void MainWindow::deleteRecord()
 {
     auto item = treeWidget->currentItem();
-    if (!item || !item->parent())
+    if (!item)
         return;
-    while (item->parent()->parent())
-        item = item->parent();
+    auto data = item->data(0, Qt::UserRole).toULongLong();
+    if (!isPointer(data))
+        return;
     storage->deleteRecord(item);
 
     dataChanged = true;

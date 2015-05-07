@@ -14,7 +14,9 @@ class QPlainTextEdit;
 class QHBoxLayout;
 class QVBoxLayout;
 class QLabel;
+class QProgressDialog;
 class QScrollArea;
+class QStatusBar;
 
 class QAbstractItemModel;
 class QTableWidget;
@@ -78,6 +80,8 @@ private: /* ui functions */
 
 private: /* ui components */
     QWidget *centralWidget;
+    QStatusBar *statusBar;
+    QProgressDialog *progressDialog;
 
     QMenuBar *mainMenu;
     QMenu *fileMenu;
