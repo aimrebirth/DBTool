@@ -28,140 +28,140 @@
 <context>
     <name>DB</name>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="172"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2598"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="204"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3235"/>
         <source>Reputations</source>
         <translation>Репутация</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="458"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1244"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2573"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3253"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="558"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1525"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3210"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4367"/>
         <source>Equipments</source>
         <translation>Оборудование</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="463"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1254"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2583"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3265"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="563"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1535"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3220"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4379"/>
         <source>Goods</source>
         <translation>Товары</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="468"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1264"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2593"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3307"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="568"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1545"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3230"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4421"/>
         <source>Projectiles</source>
         <translation>Снаряды</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="473"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1269"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2603"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3331"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="573"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1550"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3240"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4445"/>
         <source>Weapons</source>
         <translation>Оружие</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1249"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2578"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3259"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1530"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3215"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4373"/>
         <source>Gliders</source>
         <translation>Глайдеры</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1259"/>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2588"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3289"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1540"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3225"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4403"/>
         <source>Modificators</source>
         <translation>Модификаторы</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1396"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1740"/>
         <source>Map Buildings</source>
         <translation>Строения на карте</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1401"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1745"/>
         <source>Map Objects</source>
         <translation>Объекты на карте</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1827"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3277"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2281"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4391"/>
         <source>Mechanoids</source>
         <translation>Механоиды</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1817"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3235"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2271"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4349"/>
         <source>Clans</source>
         <translation>Кланы</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="1822"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3271"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2276"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4385"/>
         <source>Maps</source>
         <translation>Карты</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2911"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3295"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3622"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4409"/>
         <source>Objects</source>
         <translation>Объекты</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2916"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3301"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3627"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4415"/>
         <source>Players</source>
         <translation>Игроки</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2921"/>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3313"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3632"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4427"/>
         <source>Quests</source>
         <translation>Задания</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2926"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3637"/>
         <source>Script Variables</source>
         <translation>Скриптовые переменные</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3229"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4343"/>
         <source>Buildings</source>
         <translation>Строения</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3241"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4355"/>
         <source>Configurations</source>
         <translation>Конфигурации</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3247"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4361"/>
         <source>Coordinates</source>
         <translation>Координаты</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3283"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4397"/>
         <source>Modifications</source>
         <translation>Моды</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="2680"/>
+        <location filename="../../dep/dbmgr/src/detail/Types.cpp" line="3334"/>
         <source>Quest Rewards</source>
         <translation>Награды за задания</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3319"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4433"/>
         <source>Saves</source>
         <translation>Сохранения</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="3325"/>
+        <location filename="../../dep/dbmgr/src/detail/StorageImpl.cpp" line="4439"/>
         <source>Strings</source>
         <translation>Строки</translation>
     </message>
@@ -202,71 +202,76 @@
     </message>
     <message>
         <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="129"/>
+        <source>cooperative_player_configuration_id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="130"/>
         <source>coordinate_id</source>
         <translation>Координата</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="130"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="131"/>
         <source>damage</source>
         <translation>Урон</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="131"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="132"/>
         <source>date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="132"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="133"/>
         <source>date_created</source>
         <translation>Дата создания</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="133"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="134"/>
         <source>date_modified</source>
         <translation>Дата изменения</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="134"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="135"/>
         <source>description_id</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="135"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="136"/>
         <source>directory</source>
         <translation>Директория</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="136"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="137"/>
         <source>durability</source>
         <translation>Прочность</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="137"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="138"/>
         <source>en</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="138"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="139"/>
         <source>equipment_id</source>
         <translation>Оборудование</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="139"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="140"/>
         <source>firerate</source>
         <translation>Частота стрельбы</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="140"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="141"/>
         <source>generation</source>
         <translation>Поколение</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="141"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="142"/>
         <source>glider_id</source>
         <translation>Глайдер</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="142"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="143"/>
         <source>good_id</source>
         <translation>Товар</translation>
     </message>
@@ -275,32 +280,32 @@
         <translation type="vanished">Товары</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="143"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="144"/>
         <source>id</source>
         <translation>Номер</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="144"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="145"/>
         <source>k_param1</source>
         <translation>Коэффициент параметра 1</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="145"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="146"/>
         <source>k_param2</source>
         <translation>Коэффициент параметра 2</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="146"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="147"/>
         <source>k_price</source>
         <translation>Коэффициент цены</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="147"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="148"/>
         <source>manual</source>
         <translation>Ручная активация</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="148"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="149"/>
         <source>mapBuilding_id</source>
         <translation>Строение на карте</translation>
     </message>
@@ -309,274 +314,309 @@
         <translation type="vanished">Строение на карте</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="149"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="150"/>
         <source>map_id</source>
         <translation>Карта</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="150"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="151"/>
         <source>maxweight</source>
         <translation>Максимальная грузоподъёмность</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="151"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="152"/>
         <source>mechanoidGroup_id</source>
         <translation>Группа механоида</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="152"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="153"/>
         <source>mechanoid_id</source>
         <translation>Механоид</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="153"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="154"/>
         <source>modification_id</source>
         <translation>Модификация</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="154"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="155"/>
         <source>modificator_id</source>
         <translation>Модификатор</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="155"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="156"/>
         <source>money</source>
         <translation>Деньги</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="156"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="157"/>
         <source>name</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="157"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="158"/>
         <source>name_id</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="158"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="159"/>
         <source>notrade</source>
         <translation>Не продаётся</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="159"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="160"/>
         <source>object_id</source>
         <translation>Объект</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="160"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="161"/>
         <source>pitch</source>
         <translation>Pitch</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="161"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="162"/>
         <source>player_id</source>
         <translation>Игрок</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="162"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="163"/>
+        <source>player_mechanoid_id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="164"/>
         <source>power</source>
         <translation>Мощность</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="163"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="165"/>
         <source>price</source>
         <translation>Цена</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="164"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="166"/>
         <source>probability</source>
         <translation>Вероятность</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="165"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="167"/>
         <source>projectile_id</source>
         <translation>Снаряд</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="166"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="168"/>
         <source>quantity</source>
         <translation>Количество</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="167"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="169"/>
         <source>questReward_id</source>
         <translation>Награда</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="168"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="170"/>
         <source>quest_id</source>
         <translation>Задание</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="169"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="171"/>
         <source>rating</source>
         <translation>Рейтинг</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="170"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="172"/>
         <source>rating_courier</source>
         <translation>Рейтинг курьерский</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="171"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="173"/>
         <source>rating_fight</source>
         <translation>Рейтинг боевой</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="172"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="174"/>
         <source>rating_trade</source>
         <translation>Рейтинг торговый</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="173"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="175"/>
         <source>reputation</source>
         <translation>Репутация</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="174"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="176"/>
         <source>resource</source>
         <translation>Ресурс</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="175"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="177"/>
         <source>restore</source>
         <translation>Восстановление</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="176"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="178"/>
         <source>roll</source>
         <translation>Roll</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="177"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="179"/>
         <source>rotatespeed</source>
         <translation>Скорость поворота</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="178"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="180"/>
         <source>ru</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="179"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="181"/>
         <source>save_id</source>
         <translation>Сохранение</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="180"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="182"/>
         <source>scale</source>
         <translation>Масштаб</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="181"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="183"/>
         <source>script_language</source>
         <translation>Язык скриптов</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="182"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="184"/>
         <source>script_main</source>
         <translation>Главный скрипт</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="183"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="185"/>
         <source>special</source>
         <translation>Специальный</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="184"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="186"/>
         <source>speed</source>
         <translation>Скорость</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="185"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="187"/>
         <source>standard</source>
         <translation>Стандарт</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="186"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="188"/>
         <source>state</source>
         <translation>Состояние</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="187"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="189"/>
         <source>text_id</source>
         <translation>Text ID</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="188"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="190"/>
         <source>time</source>
         <translation>Время</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="189"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="191"/>
         <source>title_id</source>
         <translation>Заголовок</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="190"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="192"/>
         <source>type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="191"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="193"/>
         <source>value</source>
         <translation>Значение</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="192"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="194"/>
         <source>value1</source>
         <translation>Значение 1</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="193"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="195"/>
         <source>value2</source>
         <translation>Значение 2</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="194"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="196"/>
         <source>value3</source>
         <translation>Значение 3</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="195"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="197"/>
         <source>variable</source>
         <translation>Переменная</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="196"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="198"/>
         <source>version</source>
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="197"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="199"/>
         <source>weapon_id</source>
         <translation>Оружие</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="198"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="200"/>
         <source>weight</source>
         <translation>Масса</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="199"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="201"/>
         <source>x</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="200"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="202"/>
+        <source>x_b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="203"/>
+        <source>x_k</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="204"/>
         <source>y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="201"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="205"/>
+        <source>y_b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="206"/>
+        <source>y_k</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="207"/>
         <source>yaw</source>
         <translation>Yaw</translation>
     </message>
     <message>
-        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="202"/>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="208"/>
         <source>z</source>
         <translation>Z</translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="209"/>
+        <source>z_b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dep/dbmgr/src/detail/Helpers.cpp" line="210"/>
+        <source>z_k</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dep/dbmgr/src/Types.cpp" line="41"/>

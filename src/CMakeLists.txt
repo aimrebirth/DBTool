@@ -42,7 +42,7 @@ add_custom_command(
     MAIN_DEPENDENCY ${translations_src_original}
 )
 
-qt5_create_translation(qm_files ${translate_src})
+#qt5_create_translation(qm_files ${translate_src})
 add_custom_target(translations DEPENDS ${qm_files})
 
 qt5_add_resources(db_tool_resources ${db_tool_rc})

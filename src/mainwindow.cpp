@@ -63,6 +63,25 @@ void updateText(QTreeWidgetItem *item)
     }
 }
 
+bool replaceAll(std::string &str, const std::string &from, const std::string &to)
+{
+    bool replaced = false;
+    size_t start_pos = 0;
+    while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+    {
+         str.replace(start_pos, from.length(), to);
+         start_pos += to.length();
+         replaced = true;
+    }
+    return replaced;
+}
+
+std::string removeId(std::string s)
+{
+    replaceAll(s, "_id", "");
+    return s;
+}
+
 QString getColumnTypeString(polygon4::ColumnType type)
 {
     using polygon4::ColumnType;
@@ -508,42 +527,49 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
         auto value = data->getVariableString(col.second.id);
         if (col.second.fk)
         {
-            //static std::map<void *, Ptr<IObject>> ptr_storage;
-            //ptr_storage.clear();
+            std::string s1 = removeId(col.first);
+            std::string s2 = table.name;
+            std::transform(s1.begin(), s1.end(), s1.begin(), tolower);
+            std::transform(s2.begin(), s2.end(), s2.begin(), tolower);
+            if (s2.find(s1) == 0)
+            {
+                item = new QTableWidgetItem(value);
+                item->setFlags(Qt::NoItemFlags);
+                tableWidget->setItem(col.second.id, col_id++, item);
+            }
+            else
+            {
+                QComboBox *cb = new QComboBox;
 
-            auto m = storage->getOrderedMap(polygon4::detail::getTableType(col.second.fk->table_name));
-            QComboBox *cb = new QComboBox;
-            bool found = false;
-            for (auto &v : m)
-            {
-                //ptr_storage[v.second.get()] = v.second;
-                cb->addItem(QString::fromStdWString(v.first), (uint64_t)v.second.get());
-                if (value == v.second->getName())
+                auto m = storage->getOrderedMap(polygon4::detail::getTableType(col.second.fk->table_name));
+
+                bool found = false;
+                for (auto &v : m)
                 {
+                    cb->addItem(QString::fromStdWString(v.first), (uint64_t)v.second.get());
+                    if (value == v.second->getName())
+                    {
+                        cb->setCurrentIndex(cb->count() - 1);
+                        found = true;
+                    }
+                }
+                if (!found)
+                {
+                    cb->addItem("");
                     cb->setCurrentIndex(cb->count() - 1);
-                    found = true;
                 }
-            }
-            if (!found)
-            {
-                cb->addItem("");
-                cb->setCurrentIndex(cb->count() - 1);
-            }
-            connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, col, this](int index)
-            {
-                IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-                IObject *cb_data = (IObject *)cb->currentData().toULongLong();
-                if (cb_data)
+                connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, col, this](int index)
                 {
-                    //if (ptr_storage.find(cb_data) != ptr_storage.end())
-                    //    data->setVariableString(col.second.id, "", ptr_storage[cb_data]);
-                    //else
-                    //    throw "not found";
-                    data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
-                    updateText(treeWidget->invisibleRootItem());
-                }
-            });
-            tableWidget->setCellWidget(col.second.id, col_id, cb);
+                    IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
+                    IObject *cb_data = (IObject *)cb->currentData().toULongLong();
+                    if (cb_data)
+                    {
+                        data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
+                        //updateText(treeWidget->invisibleRootItem());
+                    }
+                });
+                tableWidget->setCellWidget(col.second.id, col_id, cb);
+            }
             continue;
         }
         item = new QTableWidgetItem(QString::fromStdWString(value));
@@ -609,7 +635,7 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
     dataChanged = true;
     setTitle();
 
-    updateText(treeWidget->invisibleRootItem());
+    //updateText(treeWidget->invisibleRootItem());
 }
 
 void MainWindow::addRecord()
