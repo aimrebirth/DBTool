@@ -40,6 +40,8 @@
 #include "qlabeledlistwidget.h"
 #include "qsignalleditemdelegate.h"
 
+#define ALLOC(x) x = new std::remove_reference<decltype(*x)>::type
+
 QTranslator appTranslator;
 
 const int tableWidgetColumnCount = 3;
@@ -51,8 +53,8 @@ bool isPointer(uint64_t data)
 
 void updateText(QTreeWidgetItem *item)
 {
+    //return;
     using namespace polygon4::detail;
-
     for (int i = 0; i < item->childCount(); i++)
     {
         auto child = item->child(i);
@@ -157,6 +159,23 @@ void MainWindow::createActions()
             .arg(DBTOOL_VERSION_PATCH)
             .arg(DBTOOL_VERSION_BUILD));
     });
+
+    ALLOC(dumpDbAction)(this);
+    connect(dumpDbAction, &QAction::triggered, [=]
+    {
+        auto fn = QFileDialog::getSaveFileName(this, tr("Dump database"), QString(), tr("Json files") + " (*.json)");
+        if (fn.isEmpty() || !database || database->getFullName().empty())
+            return;
+        QString tables;
+        do tables = QInputDialog::getText(this, windowTitle(), tr("Enter tables to dump. * is for all tables."));
+        while (tables.isEmpty());
+        if (tables == "*")
+            tables.clear();
+        else
+            tables = "--tables " + tables;
+        std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\" " + tables.toStdString();
+        system(cmd.c_str());
+    });
 }
 
 void MainWindow::createLanguageMenu()
@@ -178,7 +197,8 @@ void MainWindow::createLanguageMenu()
         QString filename = tsDirName + filenames[i];
 
         QTranslator translator;
-        translator.load(filename);
+        if (!translator.load(filename))
+            continue;
 
         QString language = translator.translate("MainWindow", "English");
         if (language == "English")
@@ -260,6 +280,7 @@ void MainWindow::createToolBar()
     toolBar->addAction(addRecordAction);
     toolBar->addAction(deleteRecordAction);
     toolBar->addSeparator();
+    toolBar->addAction(dumpDbAction);
     addToolBar(toolBar);
 }
 
@@ -289,7 +310,10 @@ void MainWindow::createWidgets()
     connect(signalledItemDelegate, SIGNAL(startEditing(QWidget *, const QModelIndex &)), SLOT(tableWidgetStartEdiding(QWidget *, const QModelIndex &)));
     connect(signalledItemDelegate, SIGNAL(endEditing(QWidget *, QAbstractItemModel *, const QModelIndex &)), SLOT(tableWidgetEndEdiding(QWidget *, QAbstractItemModel *, const QModelIndex &)));
     
+    dbLabel = new QLabel(this);
+
     statusBar = new QStatusBar(this);
+    statusBar->addWidget(dbLabel);
     statusBar->setSizeGripEnabled(false);
     setStatusBar(statusBar);
 }
@@ -307,6 +331,9 @@ void MainWindow::retranslateUi()
     languageMenu->setTitle(tr("Language"));
     helpMenu->setTitle(tr("Help"));
     aboutAction->setText(tr("About"));
+
+    dumpDbAction->setText(tr("Dump database"));
+    dumpDbAction->setIconText(dumpDbAction->text());
     
     setTableHeaders();
     setTitle();
@@ -419,6 +446,7 @@ void MainWindow::loadStorage()
         };
 
         storage->load(f);
+        dbLabel->setText(database->getFullName().c_str());
     }
     catch (std::exception e)
     {
@@ -565,7 +593,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                     if (cb_data)
                     {
                         data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
-                        //updateText(treeWidget->invisibleRootItem());
+                        updateText(treeWidget->invisibleRootItem());
                     }
                 });
                 tableWidget->setCellWidget(col.second.id, col_id, cb);
@@ -635,7 +663,7 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
     dataChanged = true;
     setTitle();
 
-    //updateText(treeWidget->invisibleRootItem());
+    updateText(treeWidget->invisibleRootItem());
 }
 
 void MainWindow::addRecord()

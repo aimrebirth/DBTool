@@ -97,6 +97,9 @@ private: /* ui components */
     QAction *aboutAction;
     QAction *addRecordAction;
     QAction *deleteRecordAction;
+    QAction *dumpDbAction;
+
+    QLabel *dbLabel;
 
     QHBoxLayout *mainLayout;
     QHBoxLayout *leftLayout;

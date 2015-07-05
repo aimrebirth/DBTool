@@ -52,14 +52,3 @@ add_executable(db_tool WIN32 ${db_tool_src} ${MOCSrcs} ${UISrcs} ${db_tool_resou
 target_link_libraries(db_tool DatabaseManager Qt5::Widgets ${Boost_LIBRARIES})
 add_dependencies(db_tool translations version)
 set_target_properties(db_tool PROPERTIES AUTOMOC True)
-
-if(WIN32)
-    target_link_libraries(db_tool
-        ${OPENGL_LIBRARIES}
-        ${Qt5PlatformSupport_LIBRARY}
-        ${qtharfbuzzng_LIBRARY}
-        Qt5::QWindowsIntegrationPlugin
-        imm32
-        winmm
-        Ws2_32)
-endif()
