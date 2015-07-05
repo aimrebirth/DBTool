@@ -52,9 +52,9 @@ protected:
 signals:
 private slots:
     void changeLanguage(QAction *action);
-    void openDb();
+    void openDb(bool create = false);
     void saveDb();
-    void loadStorage();
+    void loadStorage(bool create = false);
     void reloadTreeView();
     void currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void currentTableWidgetItemChanged(QTableWidgetItem *item);
@@ -90,8 +90,10 @@ private: /* ui components */
     QMenu *helpMenu;
 
     QActionGroup *languageActionGroup;
+    QAction *newDbAction;
     QAction *openDbAction;
     QAction *saveDbAction;
+    QAction *saveDbAsAction;
     QAction *reloadDbAction;
     QAction *exitAction;
     QAction *aboutAction;

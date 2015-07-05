@@ -33,6 +33,7 @@
 #include <Polygon4/DatabaseSchema.h>
 #include <Polygon4/Helpers.h>
 #include <Polygon4/Storage.h>
+#include <Polygon4/StorageImpl.h>
 #include <Polygon4/Types.h>
 
 #include "version.h"
@@ -160,7 +161,7 @@ void MainWindow::createActions()
             .arg(DBTOOL_VERSION_BUILD));
     });
 
-    ALLOC(dumpDbAction)(this);
+    ALLOC(dumpDbAction)(QIcon(":/icons/dump.png"), 0, this);
     connect(dumpDbAction, &QAction::triggered, [=]
     {
         auto fn = QFileDialog::getSaveFileName(this, tr("Dump database"), QString(), tr("Json files") + " (*.json)");
@@ -175,6 +176,25 @@ void MainWindow::createActions()
             tables = "--tables " + tables;
         std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\" " + tables.toStdString();
         system(cmd.c_str());
+    });
+
+    ALLOC(newDbAction)(QIcon(":/icons/new.png"), 0, this);
+    connect(newDbAction, &QAction::triggered, [=] { openDb(true); });
+
+    ALLOC(saveDbAsAction)(QIcon(":/icons/save.png"), 0, this);
+    connect(saveDbAsAction, &QAction::triggered, [=]
+    {
+        if (!storage)
+            return;
+        QSettings settings;
+        QString dir = settings.value("openDir", ".").toString();
+        QString fn = QFileDialog::getSaveFileName(this, tr("Save file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+        if (fn.isEmpty())
+            return;
+        database = std::make_shared<polygon4::Database>(fn.toStdString());
+        ((polygon4::detail::StorageImpl *)(storage.get()))->setDb(database);
+        storage->create();
+        saveDb();
     });
 }
 
@@ -229,8 +249,11 @@ void MainWindow::createLanguageMenu()
 void MainWindow::createMenus()
 {
     fileMenu = new QMenu(this);
+    fileMenu->addAction(newDbAction);
+    fileMenu->addSeparator();
     fileMenu->addAction(openDbAction);
     fileMenu->addAction(saveDbAction);
+    fileMenu->addAction(saveDbAsAction);
     fileMenu->addAction(reloadDbAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
@@ -273,6 +296,8 @@ void MainWindow::createLayouts()
 void MainWindow::createToolBar()
 {
     QToolBar *toolBar = new QToolBar(this);
+    toolBar->addAction(newDbAction);
+    toolBar->addSeparator();
     toolBar->addAction(openDbAction);
     toolBar->addAction(saveDbAction);
     toolBar->addAction(reloadDbAction);
@@ -281,6 +306,7 @@ void MainWindow::createToolBar()
     toolBar->addAction(deleteRecordAction);
     toolBar->addSeparator();
     toolBar->addAction(dumpDbAction);
+    toolBar->addSeparator();
     addToolBar(toolBar);
 }
 
@@ -321,8 +347,10 @@ void MainWindow::createWidgets()
 void MainWindow::retranslateUi()
 {
     fileMenu->setTitle(tr("File"));
+    newDbAction->setText(tr("New database..."));
     openDbAction->setText(tr("Open database..."));
     saveDbAction->setText(tr("Save database..."));
+    saveDbAsAction->setText(tr("Save database as..."));
     reloadDbAction->setText(tr("Reload database..."));
     exitAction->setText(tr("Exit"));
     addRecordAction->setText(tr("Add record"));
@@ -390,7 +418,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     //event->ignore();
 }
 
-void MainWindow::openDb()
+void MainWindow::openDb(bool create)
 {
     std::string filename
 #ifndef NDEBUG
@@ -411,6 +439,25 @@ void MainWindow::openDb()
 
     try
     {
+        if (create)
+        {
+            QFile f(filename.c_str());
+            if (f.exists())
+            {
+                if (QMessageBox::warning(this, tr("Confirm file overwrite"), tr("Do you want to overwrite selected file?"), QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Cancel)
+                    return;
+            }
+            if (database && filename == database->getFullName())
+            {
+                storage.reset();
+                database.reset();
+            }
+            if (!f.remove())
+            {
+                QMessageBox::critical(this, tr("Cannot remove old database file!"), f.errorString());
+                return;
+            }
+        }
         database = std::make_shared<polygon4::Database>(filename);
     }
     catch (std::exception e)
@@ -419,10 +466,10 @@ void MainWindow::openDb()
         return;
     }
 
-    loadStorage();
+    loadStorage(create);
 }
 
-void MainWindow::loadStorage()
+void MainWindow::loadStorage(bool create)
 {
     if (!database)
         return;
@@ -430,6 +477,8 @@ void MainWindow::loadStorage()
     try
     {
         storage = polygon4::initStorage(database);
+        if (create)
+            storage->create();
 
         QProgressDialog progress(tr("Opening database..."), "Abort", 0, 100, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
         progress.setFixedWidth(400);
@@ -467,7 +516,8 @@ void MainWindow::loadStorage()
 void MainWindow::reloadTreeView()
 {
     treeWidget->clear();
-    storage->printQtTreeView(treeWidget->invisibleRootItem());
+    if (storage)
+        storage->printQtTreeView(treeWidget->invisibleRootItem());
     treeWidget->invisibleRootItem()->sortChildren(0, Qt::AscendingOrder);
 }
 
@@ -539,12 +589,6 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
         tableWidget->setItem(col.second.id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
-        
-        //item = new QTableWidgetItem(col.first.c_str());
-        //item->setFlags(Qt::NoItemFlags);
-        //tableWidget->setItem(col.second.id, col_id++, item);
-        //if (disabled)
-        //    item->setFlags(Qt::NoItemFlags);
 
         item = new QTableWidgetItem(col.second.fk ? "" : getColumnTypeString(col.second.type));
         item->setFlags(Qt::NoItemFlags);
@@ -594,6 +638,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                     {
                         data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
                         updateText(treeWidget->invisibleRootItem());
+                        //updateText(currentTreeWidgetItem);
                     }
                 });
                 tableWidget->setCellWidget(col.second.id, col_id, cb);
@@ -664,6 +709,7 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
     setTitle();
 
     updateText(treeWidget->invisibleRootItem());
+    //updateText(currentTreeWidgetItem);
 }
 
 void MainWindow::addRecord()

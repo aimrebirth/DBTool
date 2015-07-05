@@ -6,5 +6,7 @@
         <file>reload.png</file>
         <file>minus.png</file>
         <file>plus.png</file>
+        <file>new.png</file>
+        <file>dump.png</file>
     </qresource>
 </RCC>
