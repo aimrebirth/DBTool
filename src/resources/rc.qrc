@@ -8,5 +8,6 @@
         <file>plus.png</file>
         <file>new.png</file>
         <file>dump.png</file>
+        <file>load.png</file>
     </qresource>
 </RCC>

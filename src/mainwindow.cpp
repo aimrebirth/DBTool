@@ -180,6 +180,17 @@ void MainWindow::createActions()
         system(cmd.c_str());
     });
 
+    ALLOC(loadDbAction)(QIcon(":/icons/load.png"), 0, this);
+    connect(loadDbAction, &QAction::triggered, [=]
+    {
+        auto fn = QFileDialog::getOpenFileName(this, tr("Load database"), QString(), tr("Json files") + " (*.json)");
+        if (fn.isEmpty() || !database || database->getFullName().empty())
+            return;
+        std::string cmd = "python dbmgr.py --load --clear --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\"";
+        system(cmd.c_str());
+        openDb();
+    });
+
     ALLOC(newDbAction)(QIcon(":/icons/new.png"), 0, this);
     connect(newDbAction, &QAction::triggered, [=] { openDb(true); });
 
@@ -260,6 +271,13 @@ void MainWindow::createMenus()
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
 
+    ALLOC(editMenu)(this);
+    editMenu->addAction(addRecordAction);
+    editMenu->addAction(deleteRecordAction);
+    editMenu->addSeparator();
+    editMenu->addAction(dumpDbAction);
+    editMenu->addAction(loadDbAction);
+
     settingsMenu = new QMenu(this);
     settingsMenu->addMenu(languageMenu);
 
@@ -268,6 +286,7 @@ void MainWindow::createMenus()
 
     mainMenu = new QMenuBar(this);
     mainMenu->addMenu(fileMenu);
+    mainMenu->addMenu(editMenu);
     mainMenu->addMenu(settingsMenu);
     mainMenu->addMenu(helpMenu);
 
@@ -308,6 +327,7 @@ void MainWindow::createToolBar()
     toolBar->addAction(deleteRecordAction);
     toolBar->addSeparator();
     toolBar->addAction(dumpDbAction);
+    toolBar->addAction(loadDbAction);
     toolBar->addSeparator();
     addToolBar(toolBar);
 }
@@ -362,7 +382,9 @@ void MainWindow::retranslateUi()
     helpMenu->setTitle(tr("Help"));
     aboutAction->setText(tr("About"));
 
-    dumpDbAction->setText(tr("Dump database"));
+    editMenu->setTitle(tr("Edit"));
+    loadDbAction->setText(tr("Load json database"));
+    dumpDbAction->setText(tr("Dump json database"));
     dumpDbAction->setIconText(dumpDbAction->text());
     
     setTableHeaders();
@@ -518,6 +540,12 @@ void MainWindow::loadStorage(bool create)
 
 void MainWindow::reloadTreeView()
 {
+    tableWidget->setCurrentCell(-1, -1);
+    tableWidget->setRowCount(0);
+    tableWidget->horizontalHeader()->setVisible(false);
+    treeWidget->setCurrentItem(treeWidget->invisibleRootItem());
+    currentTableWidgetItem = 0;
+    currentTreeWidgetItem = 0;
     treeWidget->clear();
     if (storage)
         storage->printQtTreeView(treeWidget->invisibleRootItem());
@@ -724,6 +752,9 @@ void MainWindow::tableWidgetStartEdiding(QWidget *editor, const QModelIndex &ind
 void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
 {
     using namespace polygon4::detail;
+
+    if (!currentTreeWidgetItem)
+        return;
 
     IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     auto &table = schema->tables[polygon4::detail::getTableNameByType(data->getType())];

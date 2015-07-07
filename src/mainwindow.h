@@ -85,6 +85,7 @@ private: /* ui components */
 
     QMenuBar *mainMenu;
     QMenu *fileMenu;
+    QMenu *editMenu;
     QMenu *settingsMenu;
     QMenu *languageMenu;
     QMenu *helpMenu;
@@ -99,7 +100,9 @@ private: /* ui components */
     QAction *aboutAction;
     QAction *addRecordAction;
     QAction *deleteRecordAction;
+
     QAction *dumpDbAction;
+    QAction *loadDbAction;
 
     QLabel *dbLabel;
 
