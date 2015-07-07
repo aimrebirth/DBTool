@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include <algorithm>
+
 #include <qaction.h>
 #include <qboxlayout.h>
 #include <qcombobox.h>
@@ -367,12 +369,13 @@ void MainWindow::retranslateUi()
     setTitle();
 
     polygon4::detail::retranslateFieldNames();
+    polygon4::detail::retranslateTableNames();
 }
 
 void MainWindow::setTableHeaders()
 {
     QStringList headers;
-    headers << /*tr("Field") << */tr("Name") << tr("Type") << tr("Value");
+    headers << tr("Name") << tr("Type") << tr("Value");
     tableWidget->setHorizontalHeaderLabels(headers);
 }
 
@@ -613,7 +616,29 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             {
                 QComboBox *cb = new QComboBox;
 
-                auto m = storage->getOrderedMap(polygon4::detail::getTableType(col.second.fk->table_name));
+                auto table_type = getTableType(table.name);
+                auto type = getTableType(col.second.fk->table_name);
+                auto m = storage->getOrderedMap(type);
+
+                if (type == EObjectType::String)
+                {
+                    for (auto it = m.cbegin(); it != m.cend(); )
+                    {
+                        polygon4::detail::String *s = (polygon4::detail::String *)it->second.get();
+                        if (s->table &&
+                            (s->table->getId() != static_cast<int>(table_type) || s->table->getId() == static_cast<int>(EObjectType::Any)))
+                            m.erase(it++);
+                        else
+                            ++it;
+                    }
+                }
+                if (type == EObjectType::Table)
+                {
+                    decltype(m) m2;
+                    for (auto it = m.cbegin(); it != m.cend(); it++)
+                        m2.insert(std::make_pair(getTableName(it->first), it->second));
+                    m = m2;
+                }
 
                 bool found = false;
                 for (auto &v : m)

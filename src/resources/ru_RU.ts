@@ -28,129 +28,155 @@
 <context>
     <name>DB</name>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="372"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4863"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="354"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5252"/>
         <source>Reputations</source>
         <translation>Репутация</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="874"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2346"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4838"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4105"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="864"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2440"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5227"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4295"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="255"/>
         <source>Equipments</source>
         <translation>Оборудование</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="879"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2356"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4848"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4117"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="869"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2450"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3015"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5237"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4307"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="257"/>
         <source>Goods</source>
         <translation>Товары</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="884"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2366"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4858"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4165"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="874"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2460"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5247"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4355"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="279"/>
         <source>Projectiles</source>
         <translation>Снаряды</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="889"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2371"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4868"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4189"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="879"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2465"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5257"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4385"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="293"/>
         <source>Weapons</source>
         <translation>Оружие</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2351"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4843"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4111"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2445"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5232"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4301"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="256"/>
         <source>Gliders</source>
         <translation>Глайдеры</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2361"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4853"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4147"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2455"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5242"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4337"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="276"/>
         <source>Modificators</source>
         <translation>Модификаторы</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="4999"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="5388"/>
         <source>Rewards</source>
         <translation>Награды</translation>
     </message>
     <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="266"/>
         <source>Map Buildings</source>
-        <translation type="vanished">Строения на карте</translation>
+        <translation>Строения на карте</translation>
     </message>
     <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="267"/>
+        <source>Map Goods</source>
+        <translation>Товары на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="268"/>
         <source>Map Objects</source>
-        <translation type="vanished">Объекты на карте</translation>
+        <translation>Объекты на карте</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="367"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="1605"/>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3511"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4135"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="349"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="1677"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3816"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4325"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="271"/>
         <source>Mechanoids</source>
         <translation>Механоиды</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3501"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4093"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3806"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4283"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="249"/>
         <source>Clans</source>
         <translation>Кланы</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3506"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4129"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3811"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4319"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="269"/>
         <source>Maps</source>
         <translation>Карты</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2723"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4153"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3020"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4343"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="277"/>
         <source>Objects</source>
         <translation>Объекты</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4123"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4313"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="259"/>
         <source>Groups</source>
         <translation>Группы</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4159"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4349"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="278"/>
         <source>Players</source>
         <translation>Игроки</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4177"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4373"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="290"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3026"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4171"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3325"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4361"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="288"/>
         <source>Quests</source>
         <translation>Задания</translation>
     </message>
     <message>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4367"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="289"/>
         <source>Script Variables</source>
-        <translation type="vanished">Скриптовые переменные</translation>
+        <translation>Скриптовые переменные</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="2718"/>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4087"/>
+        <location filename="../../../DatabaseManager/src/detail/Types.cpp" line="3010"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4277"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="246"/>
         <source>Buildings</source>
         <translation>Строения</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4099"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4289"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="254"/>
         <source>Configurations</source>
         <translation>Конфигурации</translation>
     </message>
@@ -159,55 +185,58 @@
         <translation type="vanished">Координаты</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4141"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4331"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="275"/>
         <source>Modifications</source>
         <translation>Моды</translation>
     </message>
     <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="287"/>
         <source>Quest Rewards</source>
-        <translation type="vanished">Награды за задания</translation>
+        <translation>Награды за задания</translation>
     </message>
     <message>
         <source>Saves</source>
         <translation type="vanished">Сохранения</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4183"/>
+        <location filename="../../../DatabaseManager/src/detail/StorageImpl.cpp" line="4379"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="291"/>
         <source>Strings</source>
         <translation>Строки</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="120"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="127"/>
         <source>armor</source>
         <translation>Броня</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="121"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="128"/>
         <source>author</source>
         <translation>Автор</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="122"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="129"/>
         <source>building_id</source>
         <translation>Строение</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="123"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="131"/>
         <source>clan_id</source>
         <translation>Клан</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="124"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="132"/>
         <source>clan_id2</source>
         <translation>Клан 2</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="125"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="133"/>
         <source>comment</source>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="126"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="134"/>
         <source>configuration_id</source>
         <translation>Конфигурация</translation>
     </message>
@@ -216,7 +245,7 @@
         <translation type="vanished">Координата</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="128"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="136"/>
         <source>damage</source>
         <translation>Урон</translation>
     </message>
@@ -225,57 +254,57 @@
         <translation type="vanished">Дата</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="129"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="137"/>
         <source>date_created</source>
         <translation>Дата создания</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="130"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="138"/>
         <source>date_modified</source>
         <translation>Дата изменения</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="131"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="140"/>
         <source>description_id</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="132"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="142"/>
         <source>directory</source>
         <translation>Директория</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="133"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="144"/>
         <source>durability</source>
         <translation>Прочность</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="134"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="145"/>
         <source>en</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="135"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="146"/>
         <source>equipment_id</source>
         <translation>Оборудование</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="136"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="147"/>
         <source>firerate</source>
         <translation>Частота стрельбы</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="137"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="148"/>
         <source>generation</source>
         <translation>Поколение</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="138"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="149"/>
         <source>glider_id</source>
         <translation>Глайдер</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="139"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="150"/>
         <source>good_id</source>
         <translation>Товар</translation>
     </message>
@@ -284,32 +313,32 @@
         <translation type="vanished">Товары</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="143"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="154"/>
         <source>id</source>
         <translation>Номер</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="145"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="156"/>
         <source>k_param1</source>
         <translation>Коэффициент параметра 1</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="146"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="157"/>
         <source>k_param2</source>
         <translation>Коэффициент параметра 2</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="147"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="158"/>
         <source>k_price</source>
         <translation>Коэффициент цены</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="148"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="160"/>
         <source>manual</source>
         <translation>Ручная активация</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="149"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="161"/>
         <source>mapBuilding_id</source>
         <translation>Строение на карте</translation>
     </message>
@@ -318,12 +347,12 @@
         <translation type="vanished">Строение на карте</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="150"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="162"/>
         <source>map_id</source>
         <translation>Карта</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="151"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="163"/>
         <source>maxweight</source>
         <translation>Максимальная грузоподъёмность</translation>
     </message>
@@ -332,22 +361,22 @@
         <translation type="vanished">Группа механоида</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="152"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="164"/>
         <source>mechanoid_id</source>
         <translation>Механоид</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="153"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="165"/>
         <source>modification_id</source>
         <translation>Модификация</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="154"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="166"/>
         <source>modificator_id</source>
         <translation>Модификатор</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="155"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="167"/>
         <source>money</source>
         <translation>Деньги</translation>
     </message>
@@ -356,112 +385,112 @@
         <translation type="vanished">Название</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="156"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="168"/>
         <source>name_id</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="157"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="169"/>
         <source>notrade</source>
         <translation>Не продаётся</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="158"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="171"/>
         <source>object_id</source>
         <translation>Объект</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="159"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="172"/>
         <source>pitch</source>
         <translation>Pitch</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="160"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="173"/>
         <source>player_id</source>
         <translation>Игрок</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="162"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="175"/>
         <source>power</source>
         <translation>Мощность</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="163"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="176"/>
         <source>price</source>
         <translation>Цена</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="164"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="177"/>
         <source>probability</source>
         <translation>Вероятность</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="165"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="178"/>
         <source>projectile_id</source>
         <translation>Снаряд</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="166"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="179"/>
         <source>quantity</source>
         <translation>Количество</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="167"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="180"/>
         <source>questReward_id</source>
         <translation>Награда</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="168"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="181"/>
         <source>quest_id</source>
         <translation>Задание</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="169"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="182"/>
         <source>rating</source>
         <translation>Рейтинг</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="170"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="183"/>
         <source>rating_courier</source>
         <translation>Рейтинг курьерский</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="171"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="184"/>
         <source>rating_fight</source>
         <translation>Рейтинг боевой</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="172"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="185"/>
         <source>rating_trade</source>
         <translation>Рейтинг торговый</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="173"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="186"/>
         <source>reputation</source>
         <translation>Репутация</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="174"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="188"/>
         <source>resource</source>
         <translation>Ресурс</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="175"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="192"/>
         <source>restore</source>
         <translation>Восстановление</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="176"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="193"/>
         <source>roll</source>
         <translation>Roll</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="177"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="195"/>
         <source>rotatespeed</source>
         <translation>Скорость поворота</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="178"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="196"/>
         <source>ru</source>
         <translation>Русский</translation>
     </message>
@@ -470,164 +499,384 @@
         <translation type="vanished">Сохранение</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="127"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="126"/>
+        <source>T</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="130"/>
+        <source>careen</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="135"/>
         <source>cooperative_player_configuration_id</source>
         <translation>Конфигурация сетевого игрока</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="140"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="139"/>
+        <source>delta_t</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="141"/>
+        <source>detonation_delay</source>
+        <translation>Задержка взрыва</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="143"/>
+        <source>distance_detonation</source>
+        <translation>Дистанция до взрыва</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="151"/>
         <source>group_id</source>
         <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="141"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="152"/>
         <source>h_max</source>
         <translation>Высота (макс.)</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="142"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="153"/>
         <source>h_min</source>
         <translation>Высота (мин.)</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="144"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="155"/>
         <source>interactive</source>
         <translation>Взаимодействует</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="161"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="159"/>
+        <source>life_time</source>
+        <translation>Время жизни</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="170"/>
+        <source>numstate</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="174"/>
         <source>player_mechanoid_id</source>
         <translation>Механоид игрока</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="179"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="187"/>
+        <source>resfront</source>
+        <translation>Сопротивление спереди</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="189"/>
+        <source>resource_drop</source>
+        <translation>Ресурс на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="190"/>
+        <source>resside</source>
+        <translation>Сопротивление боковое</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="191"/>
+        <source>restop</source>
+        <translation>Сопротивление сзади</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="194"/>
+        <source>rotate</source>
+        <translation>Поворот</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="197"/>
         <source>scale</source>
         <translation>Масштаб</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="180"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="198"/>
         <source>scale_x</source>
         <translation>Масштаб по X</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="181"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="199"/>
         <source>scale_y</source>
         <translation>Масштаб по Y</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="182"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="200"/>
         <source>scale_z</source>
         <translation>Масштаб по Z</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="183"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="201"/>
         <source>script_language</source>
         <translation>Язык скриптов</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="184"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="202"/>
         <source>script_main</source>
         <translation>Главный скрипт</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="185"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="203"/>
         <source>special</source>
         <translation>Специальный</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="186"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="204"/>
         <source>speed</source>
         <translation>Скорость</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="187"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="205"/>
+        <source>stabfront</source>
+        <translation>Стабилизация спереди</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="206"/>
+        <source>stabside</source>
+        <translation>Стабилизация боковая</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="207"/>
         <source>standard</source>
         <translation>Стандарт</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="188"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="208"/>
         <source>state</source>
         <translation>Состояние</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="189"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="209"/>
+        <source>strength</source>
+        <translation>Сила</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="210"/>
+        <source>subtype</source>
+        <translation>Подтип</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="211"/>
+        <source>table_id</source>
+        <translation>Таблица</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="212"/>
         <source>text_id</source>
         <translation>Text ID</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="190"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="213"/>
         <source>time</source>
         <translation>Время</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="191"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="214"/>
         <source>title_id</source>
         <translation>Заголовок</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="192"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="215"/>
+        <source>turbulence</source>
+        <translation>Турбулентность</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="216"/>
         <source>type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="193"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="217"/>
         <source>value</source>
         <translation>Значение</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="194"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="218"/>
         <source>value1</source>
         <translation>Значение 1</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="195"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="219"/>
         <source>value2</source>
         <translation>Значение 2</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="196"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="220"/>
         <source>value3</source>
         <translation>Значение 3</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="197"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="221"/>
         <source>variable</source>
         <translation>Переменная</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="198"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="222"/>
         <source>version</source>
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="199"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="223"/>
         <source>weapon_id</source>
         <translation>Оружие</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="200"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="224"/>
         <source>weight</source>
         <translation>Масса</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="201"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="225"/>
         <source>x</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="202"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="226"/>
         <source>y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="203"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="227"/>
         <source>yaw</source>
         <translation>Yaw</translation>
     </message>
     <message>
-        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="204"/>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="228"/>
         <source>z</source>
         <translation>Z</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="247"/>
+        <source>Clan Mechanoids</source>
+        <translation>Механоиды клана</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="248"/>
+        <source>Clan Reputations</source>
+        <translation>Репутация клана</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="250"/>
+        <source>Configuration Equipments</source>
+        <translation>Оборудование конфигурации</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="251"/>
+        <source>Configuration Goods</source>
+        <translation>Товары конфигурации</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="252"/>
+        <source>Configuration Projectiles</source>
+        <translation>Снаряды конфигурации</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="253"/>
+        <source>Configuration Weapons</source>
+        <translation>Оружие конфигурации</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="258"/>
+        <source>Group Mechanoids</source>
+        <translation>Механоиды группы</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="260"/>
+        <source>Map Building Equipments</source>
+        <translation>Оборудование в строении на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="261"/>
+        <source>Map Building Gliders</source>
+        <translation>Глайдеры в строении на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="262"/>
+        <source>Map Building Goods</source>
+        <translation>Товары в строении на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="263"/>
+        <source>Map Building Modificators</source>
+        <translation>Модификаторы в строении на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="264"/>
+        <source>Map Building Projectiles</source>
+        <translation>Снаряды в строении на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="265"/>
+        <source>Map Building Weapons</source>
+        <translation>Оружие в строении на карте</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="270"/>
+        <source>Mechanoid Quests</source>
+        <translation>Задания механоида</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="272"/>
+        <source>Modification Clans</source>
+        <translation>Кланы мода</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="273"/>
+        <source>Modification Maps</source>
+        <translation>Карты мода</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="274"/>
+        <source>Modification Mechanoids</source>
+        <translation>Механоиды мода</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="280"/>
+        <source>Quest Reward Equipments</source>
+        <translation>Оборудование в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="281"/>
+        <source>Quest Reward Gliders</source>
+        <translation>Глайдеры в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="282"/>
+        <source>Quest Reward Goods</source>
+        <translation>Товары в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="283"/>
+        <source>Quest Reward Modificators</source>
+        <translation>Модификаторы в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="284"/>
+        <source>Quest Reward Projectiles</source>
+        <translation>Снаряды в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="285"/>
+        <source>Quest Reward Reputations</source>
+        <translation>Репутация в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="286"/>
+        <source>Quest Reward Weapons</source>
+        <translation>Оружие в награде за задание</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="292"/>
+        <source>Tables</source>
+        <translation>Таблицы</translation>
+    </message>
+    <message>
+        <location filename="../../../DatabaseManager/src/detail/Helpers.cpp" line="294"/>
+        <source>Any Table</source>
+        <translation>Любая таблица</translation>
     </message>
     <message>
         <source>Point</source>
@@ -641,22 +890,22 @@
 <context>
     <name>DB Types</name>
     <message>
-        <location filename="../mainwindow.cpp" line="94"/>
+        <location filename="../mainwindow.cpp" line="96"/>
         <source>INTEGER</source>
         <translation>Целое</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="96"/>
+        <location filename="../mainwindow.cpp" line="98"/>
         <source>REAL</source>
         <translation>Вещественное</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="98"/>
+        <location filename="../mainwindow.cpp" line="100"/>
         <source>TEXT</source>
         <translation>Текст</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="100"/>
+        <location filename="../mainwindow.cpp" line="102"/>
         <source>BLOB</source>
         <translation>Двоичный объект</translation>
     </message>
@@ -676,7 +925,7 @@
         <translation type="vanished">Всё в порядке</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="349"/>
+        <location filename="../mainwindow.cpp" line="351"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
@@ -693,7 +942,7 @@
         <translation type="vanished">Сохранить...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="355"/>
+        <location filename="../mainwindow.cpp" line="357"/>
         <source>Exit</source>
         <oldsource>Exit...</oldsource>
         <translation>Выход</translation>
@@ -711,110 +960,110 @@
         <translation type="vanished">Правка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="191"/>
-        <location filename="../mainwindow.cpp" line="433"/>
+        <location filename="../mainwindow.cpp" line="193"/>
+        <location filename="../mainwindow.cpp" line="436"/>
         <source>sqlite3 database</source>
         <translation>Файл базы данных sqlite3</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="155"/>
-        <location filename="../mainwindow.cpp" line="388"/>
+        <location filename="../mainwindow.cpp" line="157"/>
+        <location filename="../mainwindow.cpp" line="391"/>
         <source>Polygon-4 DB Tool</source>
         <translation>Polygon-4 - Программа для редактирования базы данных</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="156"/>
+        <location filename="../mainwindow.cpp" line="158"/>
         <source>Author</source>
         <translation>Автор</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="167"/>
-        <location filename="../mainwindow.cpp" line="363"/>
+        <location filename="../mainwindow.cpp" line="169"/>
+        <location filename="../mainwindow.cpp" line="365"/>
         <source>Dump database</source>
         <translation>Дамп базы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="167"/>
+        <location filename="../mainwindow.cpp" line="169"/>
         <source>Json files</source>
         <translation>Файлы Json</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="171"/>
+        <location filename="../mainwindow.cpp" line="173"/>
         <source>Enter tables to dump. * is for all tables.</source>
         <translation>Введите таблицы для дампа. * для всех таблиц.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="350"/>
+        <location filename="../mainwindow.cpp" line="352"/>
         <source>New database...</source>
         <translation>Новая БД...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="351"/>
+        <location filename="../mainwindow.cpp" line="353"/>
         <source>Open database...</source>
         <translation>Открыть базу данных...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="352"/>
+        <location filename="../mainwindow.cpp" line="354"/>
         <source>Save database...</source>
         <translation>Сохранить базу данных...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="353"/>
+        <location filename="../mainwindow.cpp" line="355"/>
         <source>Save database as...</source>
         <translation>Сохранить БД как...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="354"/>
+        <location filename="../mainwindow.cpp" line="356"/>
         <source>Reload database...</source>
         <translation>Перезагрузить базу данных...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="356"/>
+        <location filename="../mainwindow.cpp" line="358"/>
         <source>Add record</source>
         <translation>Добавить запись</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="357"/>
+        <location filename="../mainwindow.cpp" line="359"/>
         <source>Delete record</source>
         <translation>Удалить запись</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="358"/>
+        <location filename="../mainwindow.cpp" line="360"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="359"/>
+        <location filename="../mainwindow.cpp" line="361"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="360"/>
+        <location filename="../mainwindow.cpp" line="362"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="361"/>
+        <location filename="../mainwindow.cpp" line="363"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="447"/>
+        <location filename="../mainwindow.cpp" line="450"/>
         <source>Confirm file overwrite</source>
         <translation>Подтвердите перезапись файла</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="447"/>
+        <location filename="../mainwindow.cpp" line="450"/>
         <source>Do you want to overwrite selected file?</source>
         <translation>Вы желаете перезаписать выбранный файл?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="457"/>
+        <location filename="../mainwindow.cpp" line="460"/>
         <source>Cannot remove old database file!</source>
         <translation>Не могу удалить старый файл БД!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="531"/>
+        <location filename="../mainwindow.cpp" line="534"/>
         <source>Saving database...</source>
         <translation>Сохранение базы данных...</translation>
     </message>
@@ -823,12 +1072,12 @@
         <translation type="vanished">Название поля</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="378"/>
         <source>Type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="378"/>
         <source>Value</source>
         <translation>Значение</translation>
     </message>
@@ -837,22 +1086,22 @@
         <translation type="vanished">Поле</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="378"/>
         <source>Name</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="465"/>
+        <location filename="../mainwindow.cpp" line="468"/>
         <source>Critical error while opening database!</source>
         <translation>Ошибка открытия базы данных!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="../mainwindow.cpp" line="486"/>
         <source>Opening database...</source>
         <translation>Загрузка базы данных...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="502"/>
+        <location filename="../mainwindow.cpp" line="505"/>
         <source>Critical error while loading the storage!</source>
         <translation>Ошибка загрузки данных!</translation>
     </message>
@@ -925,7 +1174,7 @@
         <translation type="vanished">Тип вопроса</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="156"/>
+        <location filename="../mainwindow.cpp" line="158"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
@@ -938,12 +1187,12 @@
         <translation type="vanished">Вы действительно хотите удалить текущий раздел?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="223"/>
+        <location filename="../mainwindow.cpp" line="225"/>
         <source>English</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="229"/>
+        <location filename="../mainwindow.cpp" line="231"/>
         <source>Default application language</source>
         <comment>Set this variable to &quot;1&quot; to default choose current language</comment>
         <translation>1</translation>
@@ -961,7 +1210,7 @@
         <translation type="vanished">Редактирование вопросов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="433"/>
+        <location filename="../mainwindow.cpp" line="436"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
@@ -970,7 +1219,7 @@
         <translation type="vanished">Файл с вопросами</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="191"/>
+        <location filename="../mainwindow.cpp" line="193"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
