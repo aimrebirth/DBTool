@@ -56,16 +56,15 @@ bool isPointer(uint64_t data)
 
 void updateText(QTreeWidgetItem *item)
 {
-    //return;
     using namespace polygon4::detail;
+
+    if (!item)
+        return;
+    IObject *data = (IObject *)item->data(0, Qt::UserRole).toULongLong();
+    if (isPointer((size_t)data))
+        item->setText(0, QString::fromStdWString(data->getName().wstring()));
     for (int i = 0; i < item->childCount(); i++)
-    {
-        auto child = item->child(i);
-        IObject *data = (IObject *)child->data(0, Qt::UserRole).toULongLong();
-        if (isPointer((size_t)data))
-            child->setText(0, QString::fromStdWString(data->getName().wstring()));
-        updateText(child);
-    }
+        updateText(item->child(i));
 }
 
 bool replaceAll(std::string &str, const std::string &from, const std::string &to)
@@ -204,6 +203,12 @@ void MainWindow::createActions()
         QString fn = QFileDialog::getSaveFileName(this, tr("Save file"), dir, tr("sqlite3 database") + " (*.sqlite)");
         if (fn.isEmpty())
             return;
+        QFile f(fn);
+        if (f.exists() && !f.remove())
+        {
+            QMessageBox::critical(this, tr("Cannot remove old database file!"), f.errorString());
+            return;
+        }
         database = std::make_shared<polygon4::Database>(fn.toStdString());
         ((polygon4::detail::StorageImpl *)(storage.get()))->setDb(database);
         storage->create();
@@ -485,7 +490,7 @@ void MainWindow::openDb(bool create)
         }
         database = std::make_shared<polygon4::Database>(filename);
     }
-    catch (std::exception e)
+    catch (std::exception &e)
     {
         QMessageBox::critical(this, tr("Critical error while opening database!"), e.what());
         return;
@@ -601,6 +606,8 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     currentTreeWidgetItem = current;
     currentTableWidgetItem = 0;
 
+    updateText(currentTreeWidgetItem);
+
     IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     auto &table = schema->tables[polygon4::detail::getTableNameByType(data->getType())];
     tableWidget->setRowCount(table.columns.size());
@@ -646,7 +653,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
 
                 auto table_type = getTableType(table.name);
                 auto type = getTableType(col.second.fk->table_name);
-                auto m = storage->getOrderedMap(type);
+                auto m = storage->getOrderedMap(type, data);
 
                 if (type == EObjectType::String)
                 {
@@ -690,8 +697,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                     if (cb_data)
                     {
                         data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
-                        updateText(treeWidget->invisibleRootItem());
-                        //updateText(currentTreeWidgetItem);
+                        currentTreeWidgetItemChanged(currentTreeWidgetItem, 0);
                     }
                 });
                 tableWidget->setCellWidget(col.second.id, col_id, cb);
@@ -764,8 +770,7 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
     dataChanged = true;
     setTitle();
 
-    updateText(treeWidget->invisibleRootItem());
-    //updateText(currentTreeWidgetItem);
+    currentTreeWidgetItemChanged(currentTreeWidgetItem, 0);
 }
 
 void MainWindow::addRecord()
