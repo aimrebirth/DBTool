@@ -49,6 +49,23 @@ QTranslator appTranslator;
 
 const int tableWidgetColumnCount = 3;
 
+template <class MapObjectType, class ObjectType, typename Function>
+polygon4::detail::OrderedObjectMap getOrderedMapForObject(const std::shared_ptr<polygon4::detail::Storage> &storage, ObjectType *object, Function function)
+{
+    using namespace polygon4::detail;
+
+    if (!object)
+        return OrderedObjectMap();
+    std::function<bool(Ptr<IObject>)> f = [object, function](Ptr<IObject> o)
+    {
+        MapObjectType *mo = (MapObjectType *)o.get();
+        if (!mo)
+            return false;
+        return function(object, mo);
+    };
+    return storage->getOrderedMap(MapObjectType::object_type, f);
+}
+
 bool isPointer(uint64_t data)
 {
     return data > (1 << 20);
@@ -108,7 +125,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi();
     
-    setMinimumSize(1000, 600);
+    setMinimumSize(800, 600);
     resize(minimumSizeHint());
 }
 
@@ -311,7 +328,7 @@ void MainWindow::createLayouts()
     rightLayout->addWidget(tableWidget);
 
     mainLayout = new QHBoxLayout;
-    mainLayout->addLayout(leftLayout, 3);
+    mainLayout->addLayout(leftLayout, 2);
     mainLayout->addLayout(rightLayout, 5);
 
     centralWidget = new QWidget;
@@ -388,8 +405,8 @@ void MainWindow::retranslateUi()
     aboutAction->setText(tr("About"));
 
     editMenu->setTitle(tr("Edit"));
-    loadDbAction->setText(tr("Load json database"));
-    dumpDbAction->setText(tr("Dump json database"));
+    loadDbAction->setText(tr("Load json"));
+    dumpDbAction->setText(tr("Dump json"));
     dumpDbAction->setIconText(dumpDbAction->text());
     
     setTableHeaders();
@@ -527,7 +544,7 @@ void MainWindow::loadStorage(bool create)
         storage->load(f);
         dbLabel->setText(database->getFullName().c_str());
     }
-    catch (std::exception e)
+    catch (std::exception &e)
     {
         QMessageBox::critical(this, tr("Critical error while loading the storage!"), e.what());
         return;
@@ -653,7 +670,18 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
 
                 auto table_type = getTableType(table.name);
                 auto type = getTableType(col.second.fk->table_name);
-                auto m = storage->getOrderedMap(type, data);
+
+                OrderedObjectMap m;
+
+                // prevent printing objects from other maps
+                if (type == EObjectType::MapBuilding)
+                    m = getOrderedMapForObject<MapBuilding>(storage, (Mechanoid *)data, [](Mechanoid *m, MapBuilding *mb){ return m->map == mb->map; });
+                else if (type == EObjectType::MapGood)
+                    m = getOrderedMapForObject<MapGood>(storage, (Mechanoid *)data, [](Mechanoid *m, MapGood *mb){ return m->map == mb->map; });
+                else if (type == EObjectType::MapObject)
+                    m = getOrderedMapForObject<MapObject>(storage, (Mechanoid *)data, [](Mechanoid *m, MapObject *mb){ return m->map == mb->map; });
+                else
+                    m = storage->getOrderedMap(type);
 
                 if (type == EObjectType::String)
                 {

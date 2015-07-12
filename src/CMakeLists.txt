@@ -8,6 +8,7 @@ add_custom_target(version ALL
     COMMAND git rev-list HEAD --count > version.h_
     COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h_ ${CMAKE_CURRENT_BINARY_DIR}/version.h.in
 )
+set_target_properties(version PROPERTIES FOLDER Helpers)  
 
 file(GLOB db_tool_src "*.cpp" "*.h")
 

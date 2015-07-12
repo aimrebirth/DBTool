@@ -27,6 +27,10 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 SET(LIBRARY_OUTPUT_PATH "${EXECUTABLE_OUTPUT_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EXECUTABLE_OUTPUT_PATH}")
 
+# Use solution folders.
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake Targets")
+
 ###############################################################################
 #
 # project settings
@@ -82,9 +86,14 @@ include_directories(${Qt5Multimedia_INCLUDE_DIRS})
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-include_directories(../DatabaseManager/include)
+if (NOT DATABASE_MANAGER_DIR)
+    message(FATAL_ERROR "Please, set DATABASE_MANAGER_DIR variable")
+endif()
+add_subdirectory(${DATABASE_MANAGER_DIR} DatabaseManager)
+include_directories(${DATABASE_MANAGER_DIR}/include)
+set_target_properties(sqlite3 PROPERTIES FOLDER Extern)
+set_target_properties(DatabaseManager PROPERTIES FOLDER Extern)
 
-add_subdirectory(../DatabaseManager DatabaseManager)
 add_subdirectory(src)
 
 ###############################################################################
