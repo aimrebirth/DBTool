@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <algorithm>
+#include <assert.h>
 
 #include <qaction.h>
 #include <qboxlayout.h>
@@ -31,12 +32,13 @@
 #include <qapplication.h>
 #include <qtranslator.h>
 
-#include <Polygon4/Database.h>
-#include <Polygon4/DatabaseSchema.h>
-#include <Polygon4/Helpers.h>
-#include <Polygon4/Storage.h>
-#include <Polygon4/StorageImpl.h>
-#include <Polygon4/Types.h>
+#include <Polygon4/DataManager/Common.h>
+#include <Polygon4/DataManager/Database.h>
+#include <Polygon4/DataManager/DatabaseSchema.h>
+#include <Polygon4/DataManager/Helpers.h>
+#include <Polygon4/DataManager/Storage.h>
+#include <Polygon4/DataManager/StorageImpl.h>
+#include <Polygon4/DataManager/Types.h>
 
 #include "version.h"
 
@@ -49,58 +51,16 @@ QTranslator appTranslator;
 
 const int tableWidgetColumnCount = 3;
 
-template <class MapObjectType, class ObjectType, typename Function>
-polygon4::detail::OrderedObjectMap getOrderedMapForObject(const std::shared_ptr<polygon4::detail::Storage> &storage, ObjectType *object, Function function)
-{
-    using namespace polygon4::detail;
-
-    if (!object)
-        return OrderedObjectMap();
-    std::function<bool(Ptr<IObject>)> f = [object, function](Ptr<IObject> o)
-    {
-        MapObjectType *mo = (MapObjectType *)o.get();
-        if (!mo)
-            return false;
-        return function(object, mo);
-    };
-    return storage->getOrderedMap(MapObjectType::object_type, f);
-}
-
-bool isPointer(uint64_t data)
-{
-    return data > (1 << 20);
-}
-
 void updateText(QTreeWidgetItem *item)
 {
     using namespace polygon4::detail;
 
     if (!item)
         return;
-    IObject *data = (IObject *)item->data(0, Qt::UserRole).toULongLong();
-    if (isPointer((size_t)data))
-        item->setText(0, QString::fromStdWString(data->getName().wstring()));
+    auto data = (TreeItem *)item->data(0, Qt::UserRole).toULongLong();
+    item->setText(0, QCoreApplication::translate("DB", to_string(data->name).c_str()));
     for (int i = 0; i < item->childCount(); i++)
         updateText(item->child(i));
-}
-
-bool replaceAll(std::string &str, const std::string &from, const std::string &to)
-{
-    bool replaced = false;
-    size_t start_pos = 0;
-    while ((start_pos = str.find(from, start_pos)) != std::string::npos)
-    {
-         str.replace(start_pos, from.length(), to);
-         start_pos += to.length();
-         replaced = true;
-    }
-    return replaced;
-}
-
-std::string removeId(std::string s)
-{
-    replaceAll(s, "_id", "");
-    return s;
 }
 
 QString getColumnTypeString(polygon4::ColumnType type)
@@ -114,8 +74,13 @@ QString getColumnTypeString(polygon4::ColumnType type)
         return QCoreApplication::translate("DB Types", "REAL");
     case ColumnType::Text:
         return QCoreApplication::translate("DB Types", "TEXT");
+    case ColumnType::Bool:
+        return QCoreApplication::translate("DB Types", "BOOL");
     case ColumnType::Blob:
         return QCoreApplication::translate("DB Types", "BLOB");
+    default:
+        assert(false);
+        break;
     }
     return "";
 }
@@ -155,7 +120,7 @@ void MainWindow::createActions()
     connect(saveDbAction, SIGNAL(triggered()), SLOT(saveDb()));
 
     reloadDbAction = new QAction(QIcon(":/icons/reload.png"), 0, this);
-    connect(reloadDbAction, SIGNAL(triggered()), SLOT(saveDb()));
+    //connect(reloadDbAction, SIGNAL(triggered()), SLOT(saveDb()));
     connect(reloadDbAction, SIGNAL(triggered()), SLOT(loadStorage()));
 
     addRecordAction = new QAction(QIcon(":/icons/plus.png"), 0, this);
@@ -423,6 +388,27 @@ void MainWindow::setTableHeaders()
     tableWidget->setHorizontalHeaderLabels(headers);
 }
 
+void MainWindow::buildTree(QTreeWidgetItem *qitem, polygon4::TreeItem *item)
+{
+    if (item->children.empty())
+        return;
+    for (auto &c : item->children)
+    {
+        auto item = new QTreeWidgetItem(qitem, QStringList(QCoreApplication::translate("DB", to_string(c->name).c_str())));
+        item->setData(0, Qt::UserRole, (uint64_t)c.get());
+        buildTree(item, c.get());
+    }
+    qitem->sortChildren(0, Qt::AscendingOrder);
+}
+
+QTreeWidgetItem *MainWindow::addItem(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item)
+{
+    auto root = new QTreeWidgetItem(qitem, QStringList(item->name.toQString()));
+    root->setData(0, Qt::UserRole, (uint64_t)item);
+    buildTree(root, item);
+    return root;
+}
+
 void MainWindow::setTitle()
 {
     QString title;
@@ -469,7 +455,7 @@ void MainWindow::openDb(bool create)
 {
     std::string filename
 #ifndef NDEBUG
-        = "h:\\Games\\Epic Games\\Projects\\Polygon4\\Mods\\db.sqlite"
+        = R"(k:\AIM\Polygon4\Mods\db.sqlite)"
 #endif
         ;
 
@@ -553,9 +539,7 @@ void MainWindow::loadStorage(bool create)
     setTitle();
 
     dataChanged = false;
-    delete schema;
-    schema = new polygon4::DatabaseSchema;
-    database->getSchema(schema);
+    schema = database->getSchema();
 
     reloadTreeView();
 }
@@ -570,8 +554,10 @@ void MainWindow::reloadTreeView()
     currentTreeWidgetItem = 0;
     treeWidget->clear();
     if (storage)
-        storage->printQtTreeView(treeWidget->invisibleRootItem());
-    treeWidget->invisibleRootItem()->sortChildren(0, Qt::AscendingOrder);
+    {
+        tree = storage->printTree();
+        buildTree(treeWidget->invisibleRootItem(), tree.get());
+    }
 }
 
 void MainWindow::saveDb()
@@ -611,7 +597,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     using namespace polygon4::detail;
 
     tableWidget->setCurrentCell(-1, -1);
-    if (!current || !current->parent() || !isPointer(current->data(0, Qt::UserRole).toULongLong()))
+    if (!current || !current->parent() || !((TreeItem *)current->data(0, Qt::UserRole).toULongLong())->object)
     {
         tableWidget->setRowCount(0);
         tableWidget->horizontalHeader()->setVisible(false);
@@ -625,8 +611,12 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
 
     updateText(currentTreeWidgetItem);
 
-    IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-    auto &table = schema->tables[polygon4::detail::getTableNameByType(data->getType())];
+    auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
+    auto table_name = to_string(polygon4::detail::getTableNameByType(data->type));
+    auto table_iter = schema->tables.find(table_name);
+    if (table_iter == schema->tables.end())
+        return;
+    auto &table = schema->tables.find(table_name)->second;
     tableWidget->setRowCount(table.columns.size());
     for (size_t i = 0; i < table.columns.size(); i++)
         tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
@@ -639,19 +629,22 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
         if (col.second.id == 0 && col.second.name == "id" && col.second.type == polygon4::ColumnType::Integer)
             disabled = true;
 
+        // name
         item = new QTableWidgetItem(getFieldName(col.second.name));
         item->setFlags(Qt::ItemIsEnabled);
         tableWidget->setItem(col.second.id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
+        // type
         item = new QTableWidgetItem(col.second.fk ? "" : getColumnTypeString(col.second.type));
         item->setFlags(Qt::NoItemFlags);
         tableWidget->setItem(col.second.id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
-        auto value = data->getVariableString(col.second.id);
+        // value
+        auto value = data->object->getVariableString(col.second.id);
         if (col.second.fk)
         {
             std::string s1 = removeId(col.first);
@@ -660,7 +653,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             std::transform(s2.begin(), s2.end(), s2.begin(), tolower);
             if (s2.find(s1) == 0)
             {
-                item = new QTableWidgetItem(value);
+                item = new QTableWidgetItem(value.toQString());
                 item->setFlags(Qt::NoItemFlags);
                 tableWidget->setItem(col.second.id, col_id++, item);
             }
@@ -674,12 +667,16 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 OrderedObjectMap m;
 
                 // prevent printing objects from other maps
+                auto f = [](auto m, auto mo) { return m->map == mo->map; };
+                auto f2 = [](auto m, auto mo) { return m->modification == mo->modification && m->map == mo->map; };
                 if (type == EObjectType::MapBuilding)
-                    m = getOrderedMapForObject<MapBuilding>(storage, (Mechanoid *)data, [](Mechanoid *m, MapBuilding *mb){ return m->map == mb->map; });
+                    m = getOrderedMapForObject<MapBuilding>(storage, (Mechanoid *)data->object, f);
                 else if (type == EObjectType::MapGood)
-                    m = getOrderedMapForObject<MapGood>(storage, (Mechanoid *)data, [](Mechanoid *m, MapGood *mb){ return m->map == mb->map; });
+                    m = getOrderedMapForObject<MapGood>(storage, (Mechanoid *)data->object, f);
                 else if (type == EObjectType::MapObject)
-                    m = getOrderedMapForObject<MapObject>(storage, (Mechanoid *)data, [](Mechanoid *m, MapObject *mb){ return m->map == mb->map; });
+                    m = getOrderedMapForObject<MapObject>(storage, (Mechanoid *)data->object, f);
+                else if (type == EObjectType::ModificationMap)
+                    m = getOrderedMapForObject<ModificationMap>(storage, (Mechanoid *)data->object, f2);
                 else
                     m = storage->getOrderedMap(type);
 
@@ -687,7 +684,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 {
                     for (auto it = m.cbegin(); it != m.cend(); )
                     {
-                        polygon4::detail::String *s = (polygon4::detail::String *)it->second.get();
+                        polygon4::detail::String *s = (polygon4::detail::String *)it->second;
                         if (s->table &&
                             (s->table->getId() != static_cast<int>(table_type) || s->table->getId() == static_cast<int>(EObjectType::Any)))
                             m.erase(it++);
@@ -699,14 +696,14 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 {
                     decltype(m) m2;
                     for (auto it = m.cbegin(); it != m.cend(); it++)
-                        m2.insert(std::make_pair(getTableName(it->first), it->second));
+                        m2.insert(std::make_pair(getTableName(to_string(it->first)), it->second));
                     m = m2;
                 }
 
                 bool found = false;
                 for (auto &v : m)
                 {
-                    cb->addItem(QString::fromStdWString(v.first), (uint64_t)v.second.get());
+                    cb->addItem(v.first.toQString(), (uint64_t)v.second);
                     if (value == v.second->getName())
                     {
                         cb->setCurrentIndex(cb->count() - 1);
@@ -720,24 +717,27 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 }
                 connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, col, this](int index)
                 {
-                    IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-                    IObject *cb_data = (IObject *)cb->currentData().toULongLong();
+                    auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
+                    auto cb_data = (IObjectBase *)cb->currentData().toULongLong();
                     if (cb_data)
                     {
-                        data->setVariableString(col.second.id, "", std::shared_ptr<IObject>(cb_data, [](IObject *){}));
+                        data->object->setVariableString(col.second.id, cb_data);
+                        data->name = data->object->getName();
                         currentTreeWidgetItemChanged(currentTreeWidgetItem, 0);
                     }
                 });
                 tableWidget->setCellWidget(col.second.id, col_id, cb);
             }
-            continue;
         }
-        item = new QTableWidgetItem(QString::fromStdWString(value));
-        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
-        tableWidget->setItem(col.second.id, col_id++, item);
-        item->setData(Qt::UserRole, (uint64_t)&col.second);
-        if (disabled)
-            item->setFlags(Qt::NoItemFlags);
+        else
+        {
+            item = new QTableWidgetItem(value.toQString());
+            item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
+            tableWidget->setItem(col.second.id, col_id++, item);
+            item->setData(Qt::UserRole, (uint64_t)&col.second);
+            if (disabled)
+                item->setFlags(Qt::NoItemFlags);
+        }
     }
 }
 
@@ -790,10 +790,10 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
     if (!currentTreeWidgetItem)
         return;
 
-    IObject *data = (IObject *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-    auto &table = schema->tables[polygon4::detail::getTableNameByType(data->getType())];
+    auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
+    auto &table = schema->tables.find(to_string(polygon4::detail::getTableNameByType(data->type)))->second;
 
-    data->setVariableString(currentTableWidgetItem->row(), currentTableWidgetItem->data(Qt::DisplayRole).toString().toStdString());
+    data->object->setVariableString(currentTableWidgetItem->row(), currentTableWidgetItem->data(Qt::DisplayRole).toString().toStdString());
 
     dataChanged = true;
     setTitle();
@@ -808,15 +808,15 @@ void MainWindow::addRecord()
         return;
     while (1)
     {
-        auto data = item->data(0, Qt::UserRole).toULongLong();
-        if (data && isPointer(data))
+        auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
+        if (data && data->object)
             item = item->parent();
         else
             break;
     }
-    auto new_item = storage->addRecord(item);
-    if (!new_item)
-        return;
+    auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
+    auto r = storage->addRecord(data);
+    auto new_item = addItem(item, r.get());
     treeWidget->setCurrentItem(new_item);
     new_item->setExpanded(true);
 
@@ -829,10 +829,14 @@ void MainWindow::deleteRecord()
     auto item = treeWidget->currentItem();
     if (!item)
         return;
-    auto data = item->data(0, Qt::UserRole).toULongLong();
-    if (!isPointer(data))
+    auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
+    if (!data || !data->object)
         return;
-    storage->deleteRecord(item);
+    storage->deleteRecord(data);
+    data->remove();
+    auto p = item->parent();
+    if (p)
+        p->removeChild(item);
 
     dataChanged = true;
     setTitle();

@@ -23,7 +23,7 @@ set(db_tool_rc
     resources/rc.qrc
 )
 
-file(GLOB_RECURSE dbmgr_src "../../DatabaseManager/src/*")
+file(GLOB_RECURSE dbmgr_src "../../DataManager/src/*")
 set(translate_src
     ${db_tool_src}
     ${dbmgr_src}
@@ -49,7 +49,21 @@ add_custom_target(translations DEPENDS ${qm_files})
 qt5_add_resources(db_tool_resources ${db_tool_rc})
 qt5_add_resources(db_tool_resources_qm ${translations_src})  
 
+#
+# target
+#
+include_directories(${Boost_INCLUDE_DIRS})
+
+include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Multimedia_INCLUDE_DIRS})
+
+set(SOLUTION_FOLDER Extern)
+add_subdirectory(${DATA_MANAGER_DIR} DataManager)
+include_directories(${DATA_MANAGER_DIR}/include)
+include_directories(${DATA_MANAGER_ADDITIONAL_INCLUDES})
+
 add_executable(db_tool WIN32 ${db_tool_src} ${MOCSrcs} ${UISrcs} ${db_tool_resources} ${db_tool_resources_qm} resources/res.rc)
-target_link_libraries(db_tool DatabaseManager Qt5::Widgets ${Boost_LIBRARIES})
+target_link_libraries(db_tool DataManager Qt5::Widgets ${Boost_LIBRARIES})
 add_dependencies(db_tool translations version)
 set_target_properties(db_tool PROPERTIES AUTOMOC True)

@@ -62,6 +62,7 @@ endif()
 ###############################################################################
 
 add_definitions(-DUSE_QT)
+add_definitions(-DPOLYGON4_STATIC)
 
 if (WIN32)
     if (MSVC)
@@ -77,21 +78,14 @@ endif()
 #
 ###############################################################################
 
-include_directories(${Boost_INCLUDE_DIRS})
-
-include_directories(${Qt5Core_INCLUDE_DIRS})
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5Multimedia_INCLUDE_DIRS})
-
 link_directories(${Boost_LIBRARY_DIRS})
 
-if (NOT DATABASE_MANAGER_DIR)
-    message(FATAL_ERROR "Please, set DATABASE_MANAGER_DIR variable")
+if (NOT DATA_MANAGER_DIR)
+    message(FATAL_ERROR "Please, set DATA_MANAGER_DIR variable")
+else()
+    get_filename_component(DATA_MANAGER_DIR "${DATA_MANAGER_DIR}" ABSOLUTE)
+    set(DATA_MANAGER_DIR ${DATA_MANAGER_DIR} CACHE STRING "" FORCE)
 endif()
-add_subdirectory(${DATABASE_MANAGER_DIR} DatabaseManager)
-include_directories(${DATABASE_MANAGER_DIR}/include)
-set_target_properties(sqlite3 PROPERTIES FOLDER Extern)
-set_target_properties(DatabaseManager PROPERTIES FOLDER Extern)
 
 add_subdirectory(src)
 

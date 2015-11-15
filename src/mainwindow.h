@@ -32,6 +32,7 @@ namespace polygon4
     namespace detail
     {
         class Storage;
+        struct TreeItem;
     }
     struct Table;
     class Database;
@@ -77,6 +78,8 @@ private: /* ui functions */
     void createToolBar();
     void setTitle();
     void setTableHeaders();
+    void buildTree(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item);
+    QTreeWidgetItem *addItem(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item);
 
 private: /* ui components */
     QWidget *centralWidget;
@@ -120,6 +123,7 @@ private: /* ui components */
 private: /* data */
     std::shared_ptr<polygon4::Database> database;
     std::shared_ptr<polygon4::detail::Storage> storage;
-    polygon4::DatabaseSchema *schema = 0;
+    std::shared_ptr<const polygon4::DatabaseSchema> schema;
     bool dataChanged = false;
+    std::shared_ptr<polygon4::detail::TreeItem> tree;
 };
