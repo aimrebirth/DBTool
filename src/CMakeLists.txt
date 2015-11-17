@@ -2,6 +2,8 @@
 # Polygon-4 DB Tool
 #
 
+source_group("MOC files" ".*automoc\\.cpp")
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_custom_target(version ALL
@@ -23,7 +25,7 @@ set(db_tool_rc
     resources/rc.qrc
 )
 
-file(GLOB_RECURSE dbmgr_src "../../DataManager/src/*")
+file(GLOB_RECURSE dbmgr_src "${DATA_MANAGER_DIR}/src/*")
 set(translate_src
     ${db_tool_src}
     ${dbmgr_src}

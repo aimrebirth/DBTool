@@ -34,8 +34,8 @@
 
 #include <Polygon4/DataManager/Common.h>
 #include <Polygon4/DataManager/Database.h>
-#include <Polygon4/DataManager/DatabaseSchema.h>
 #include <Polygon4/DataManager/Helpers.h>
+#include <Polygon4/DataManager/Schema.h>
 #include <Polygon4/DataManager/Storage.h>
 #include <Polygon4/DataManager/StorageImpl.h>
 #include <Polygon4/DataManager/Types.h>
@@ -61,28 +61,6 @@ void updateText(QTreeWidgetItem *item)
     item->setText(0, QCoreApplication::translate("DB", to_string(data->name).c_str()));
     for (int i = 0; i < item->childCount(); i++)
         updateText(item->child(i));
-}
-
-QString getColumnTypeString(polygon4::ColumnType type)
-{
-    using polygon4::ColumnType;
-    switch (type)
-    {
-    case ColumnType::Integer:
-        return QCoreApplication::translate("DB Types", "INTEGER");
-    case ColumnType::Real:
-        return QCoreApplication::translate("DB Types", "REAL");
-    case ColumnType::Text:
-        return QCoreApplication::translate("DB Types", "TEXT");
-    case ColumnType::Bool:
-        return QCoreApplication::translate("DB Types", "BOOL");
-    case ColumnType::Blob:
-        return QCoreApplication::translate("DB Types", "BLOB");
-    default:
-        assert(false);
-        break;
-    }
-    return "";
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -539,7 +517,8 @@ void MainWindow::loadStorage(bool create)
     setTitle();
 
     dataChanged = false;
-    schema = database->getSchema();
+    schemaMm.clear();
+    schema = std::make_shared<Schema>(polygon4::detail::getSchema());
 
     reloadTreeView();
 }
@@ -613,56 +592,51 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
 
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     auto table_name = to_string(polygon4::detail::getTableNameByType(data->type));
-    auto table_iter = schema->tables.find(table_name);
-    if (table_iter == schema->tables.end())
+    auto classes = schema->getClasses();
+    auto citer = classes.find(table_name);
+    if (citer == classes.end())
         return;
-    auto &table = schema->tables.find(table_name)->second;
-    tableWidget->setRowCount(table.columns.size());
-    for (size_t i = 0; i < table.columns.size(); i++)
+    auto vars = citer->getVariables();
+    tableWidget->setRowCount(vars.size());
+    for (size_t i = 0; i < vars.size(); i++)
         tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
-    for (auto &col : table.columns)
+    for (auto &var : vars)
     {
         int col_id = 0;
         QTableWidgetItem *item;
 
         bool disabled = false;
-        if (col.second.id == 0 && col.second.name == "id" && col.second.type == polygon4::ColumnType::Integer)
+        if (var.isId())
             disabled = true;
 
         // name
-        item = new QTableWidgetItem(getFieldName(col.second.name));
+        item = new QTableWidgetItem(getFieldName(var.getSqlName()));
         item->setFlags(Qt::ItemIsEnabled);
-        tableWidget->setItem(col.second.id, col_id++, item);
+        tableWidget->setItem(var.getId(), col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
         // type
-        item = new QTableWidgetItem(col.second.fk ? "" : getColumnTypeString(col.second.type));
+        item = new QTableWidgetItem(getColumnTypeString(var.getType()->getDataType()));
         item->setFlags(Qt::NoItemFlags);
-        tableWidget->setItem(col.second.id, col_id++, item);
+        tableWidget->setItem(var.getId(), col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
         // value
-        auto value = data->object->getVariableString(col.second.id);
-        if (col.second.fk)
+        auto value = data->object->getVariableString(var.getId());
+        if (var.isFk())
         {
-            std::string s1 = removeId(col.first);
-            std::string s2 = table.name;
-            std::transform(s1.begin(), s1.end(), s1.begin(), tolower);
-            std::transform(s2.begin(), s2.end(), s2.begin(), tolower);
-            if (s2.find(s1) == 0)
+            if (citer->getParent() && var.getType()->getCppName() == citer->getParent()->getCppName())
             {
                 item = new QTableWidgetItem(value.toQString());
                 item->setFlags(Qt::NoItemFlags);
-                tableWidget->setItem(col.second.id, col_id++, item);
+                tableWidget->setItem(var.getId(), col_id++, item);
             }
             else
             {
-                QComboBox *cb = new QComboBox;
-
-                auto table_type = getTableType(table.name);
-                auto type = getTableType(col.second.fk->table_name);
+                auto table_type = getTableType(citer->getCppName());
+                auto type = getTableType(var.getType()->getCppName());
 
                 OrderedObjectMap m;
 
@@ -687,9 +661,13 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                         polygon4::detail::String *s = (polygon4::detail::String *)it->second;
                         if (s->table &&
                             (s->table->getId() != static_cast<int>(table_type) || s->table->getId() == static_cast<int>(EObjectType::Any)))
+                        {
                             m.erase(it++);
+                        }
                         else
+                        {
                             ++it;
+                        }
                     }
                 }
                 if (type == EObjectType::Table)
@@ -699,7 +677,8 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                         m2.insert(std::make_pair(getTableName(to_string(it->first)), it->second));
                     m = m2;
                 }
-
+                
+                QComboBox *cb = new QComboBox;
                 bool found = false;
                 for (auto &v : m)
                 {
@@ -715,26 +694,26 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                     cb->addItem("");
                     cb->setCurrentIndex(cb->count() - 1);
                 }
-                connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, col, this](int index)
+                connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, var, this](int index)
                 {
                     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
                     auto cb_data = (IObjectBase *)cb->currentData().toULongLong();
                     if (cb_data)
                     {
-                        data->object->setVariableString(col.second.id, cb_data);
+                        data->object->setVariableString(var.getId(), cb_data);
                         data->name = data->object->getName();
                         currentTreeWidgetItemChanged(currentTreeWidgetItem, 0);
                     }
                 });
-                tableWidget->setCellWidget(col.second.id, col_id, cb);
+                tableWidget->setCellWidget(var.getId(), col_id, cb);
             }
         }
         else
         {
             item = new QTableWidgetItem(value.toQString());
             item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
-            tableWidget->setItem(col.second.id, col_id++, item);
-            item->setData(Qt::UserRole, (uint64_t)&col.second);
+            tableWidget->setItem(var.getId(), col_id++, item);
+            item->setData(Qt::UserRole, (uint64_t)schemaMm.create<Variable>(var));
             if (disabled)
                 item->setFlags(Qt::NoItemFlags);
         }
@@ -755,20 +734,20 @@ void MainWindow::tableWidgetStartEdiding(QWidget *editor, const QModelIndex &ind
     if (!currentTableWidgetItem)
         return;
 
-    Column *column = (Column *)currentTableWidgetItem->data(Qt::UserRole).toULongLong();
-    if (!column)
+    Variable *var = (Variable *)currentTableWidgetItem->data(Qt::UserRole).toULongLong();
+    if (!var)
         return;
 
     QValidator *validator = 0;
-    switch (column->type)
+    switch (var->getDataType())
     {
-    case ColumnType::Integer:
+    case DataType::Integer:
         {
             static QIntValidator intValidator;
             validator = &intValidator;
         }
         break;
-    case ColumnType::Real:
+    case DataType::Real:
         {
             static QDoubleValidator doubleValidator;
             doubleValidator.setLocale(QLocale::c());
@@ -791,8 +770,6 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
         return;
 
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-    auto &table = schema->tables.find(to_string(polygon4::detail::getTableNameByType(data->type)))->second;
-
     data->object->setVariableString(currentTableWidgetItem->row(), currentTableWidgetItem->data(Qt::DisplayRole).toString().toStdString());
 
     dataChanged = true;

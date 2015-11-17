@@ -4,6 +4,8 @@
 
 #include <QMainWindow>
 
+#include <Polygon4/DataManager/MemoryManager.h>
+
 class QWidget;
 class QMenuBar;
 class QMenu;
@@ -36,8 +38,9 @@ namespace polygon4
     }
     struct Table;
     class Database;
-    struct DatabaseSchema;
 }
+
+class Schema;
 
 class MainWindow : public QMainWindow
 {
@@ -123,7 +126,8 @@ private: /* ui components */
 private: /* data */
     std::shared_ptr<polygon4::Database> database;
     std::shared_ptr<polygon4::detail::Storage> storage;
-    std::shared_ptr<const polygon4::DatabaseSchema> schema;
+    std::shared_ptr<const Schema> schema;
+    MemoryManager schemaMm;
     bool dataChanged = false;
     std::shared_ptr<polygon4::detail::TreeItem> tree;
 };
