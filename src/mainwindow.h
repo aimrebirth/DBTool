@@ -40,8 +40,6 @@ namespace polygon4
     class Database;
 }
 
-class Schema;
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -126,7 +124,6 @@ private: /* ui components */
 private: /* data */
     std::shared_ptr<polygon4::Database> database;
     std::shared_ptr<polygon4::detail::Storage> storage;
-    std::shared_ptr<const Schema> schema;
     MemoryManager schemaMm;
     bool dataChanged = false;
     std::shared_ptr<polygon4::detail::TreeItem> tree;

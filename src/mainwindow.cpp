@@ -3,39 +3,13 @@
 #include <algorithm>
 #include <assert.h>
 
-#include <qaction.h>
-#include <qboxlayout.h>
-#include <qcombobox.h>
-#include <qfiledialog.h>
-#include <qheaderview.h>
-#include <qimage.h>
-#include <qimagereader.h>
-#include <qinputdialog.h>
-#include <qitemdelegate.h>
-#include <qlabel.h>
-#include <qlistwidget.h>
-#include <qmenu.h>
-#include <qmenubar.h>
-#include <qmessagebox.h>
-#include <qplaintextedit.h>
-#include <qprogressbar.h>
-#include <qprogressdialog.h>
-#include <qscrollbar.h>
-#include <qsettings.h>
-#include <qsizegrip.h>
-#include <qstatusbar.h>
-#include <qtablewidget.h>
-#include <qtimer.h>
-#include <qtoolbar.h>
-#include <qtreewidget.h>
+#include <QtWidgets>
 
 #include <qapplication.h>
 #include <qtranslator.h>
 
 #include <Polygon4/DataManager/Common.h>
 #include <Polygon4/DataManager/Database.h>
-#include <Polygon4/DataManager/Helpers.h>
-#include <Polygon4/DataManager/Schema.h>
 #include <Polygon4/DataManager/Storage.h>
 #include <Polygon4/DataManager/StorageImpl.h>
 #include <Polygon4/DataManager/Types.h>
@@ -58,7 +32,7 @@ void updateText(QTreeWidgetItem *item)
     if (!item)
         return;
     auto data = (TreeItem *)item->data(0, Qt::UserRole).toULongLong();
-    item->setText(0, QCoreApplication::translate("DB", to_string(data->name).c_str()));
+    item->setText(0, polygon4::tr(to_string(data->name).c_str()).toQString());
     for (int i = 0; i < item->childCount(); i++)
         updateText(item->child(i));
 }
@@ -66,6 +40,8 @@ void updateText(QTreeWidgetItem *item)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    polygon4::initTranslator();
+
     setupUi();
     
     setMinimumSize(800, 600);
@@ -125,8 +101,7 @@ void MainWindow::createActions()
     ALLOC(dumpDbAction)(QIcon(":/icons/dump.png"), 0, this);
     connect(dumpDbAction, &QAction::triggered, [=]
     {
-        auto fn = QFileDialog::getSaveFileName(this, tr("Dump database"), QString(), tr("Json files") + " (*.json)");
-        if (fn.isEmpty() || !database || database->getFullName().empty())
+        if (!database || database->getFullName().empty())
             return;
         QString tables;
         do tables = QInputDialog::getText(this, windowTitle(), tr("Enter tables to dump. * is for all tables."));
@@ -135,6 +110,9 @@ void MainWindow::createActions()
             tables.clear();
         else
             tables = "--tables " + tables;
+        auto fn = QFileDialog::getSaveFileName(this, tr("Dump database"), QString(), tr("Json files") + " (*.json)");
+        if (fn.isEmpty())
+            return;
         std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\" " + tables.toStdString();
         system(cmd.c_str());
     });
@@ -142,8 +120,10 @@ void MainWindow::createActions()
     ALLOC(loadDbAction)(QIcon(":/icons/load.png"), 0, this);
     connect(loadDbAction, &QAction::triggered, [=]
     {
+        if (!database || database->getFullName().empty())
+            return;
         auto fn = QFileDialog::getOpenFileName(this, tr("Load database"), QString(), tr("Json files") + " (*.json)");
-        if (fn.isEmpty() || !database || database->getFullName().empty())
+        if (fn.isEmpty())
             return;
         std::string cmd = "python dbmgr.py --load --clear --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\"";
         system(cmd.c_str());
@@ -354,9 +334,6 @@ void MainWindow::retranslateUi()
     
     setTableHeaders();
     setTitle();
-
-    polygon4::detail::retranslateFieldNames();
-    polygon4::detail::retranslateTableNames();
 }
 
 void MainWindow::setTableHeaders()
@@ -372,7 +349,7 @@ void MainWindow::buildTree(QTreeWidgetItem *qitem, polygon4::TreeItem *item)
         return;
     for (auto &c : item->children)
     {
-        auto item = new QTreeWidgetItem(qitem, QStringList(QCoreApplication::translate("DB", to_string(c->name).c_str())));
+        auto item = new QTreeWidgetItem(qitem, QStringList(polygon4::tr(to_string(c->name).c_str()).toQString()));
         item->setData(0, Qt::UserRole, (uint64_t)c.get());
         buildTree(item, c.get());
     }
@@ -408,12 +385,12 @@ void MainWindow::changeLanguage(QAction *action)
         QApplication::installTranslator(&appTranslator);
         appTranslator.load(language);
         if (language.indexOf("ru") != -1)
-            polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::ru);
+            polygon4::gCurrentLocalizationId = polygon4::LocalizationType::ru;
         else if (language.indexOf("en") != -1)
-            polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::en);
+            polygon4::gCurrentLocalizationId = polygon4::LocalizationType::en;
     }
     else
-        polygon4::gCurrentLocalizationId = static_cast<int>(polygon4::detail::LocalizationType::en);
+        polygon4::gCurrentLocalizationId = polygon4::LocalizationType::en;
     reloadTreeView();
 }
 
@@ -433,7 +410,7 @@ void MainWindow::openDb(bool create)
 {
     std::string filename
 #ifndef NDEBUG
-        = R"(k:\AIM\Polygon4\Mods\db.sqlite)"
+        //= R"(k:\AIM\Polygon4\Mods\db.sqlite)"
 #endif
         ;
 
@@ -441,7 +418,11 @@ void MainWindow::openDb(bool create)
     {
         QSettings settings;
         QString dir = settings.value("openDir", ".").toString();
-        QString fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+        QString fn;
+        if (create)
+            fn = QFileDialog::getSaveFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+        else
+            fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
         if (fn == QString())
             return;
         settings.setValue("openDir", QFileInfo(fn).absoluteDir().absolutePath());
@@ -453,17 +434,12 @@ void MainWindow::openDb(bool create)
         if (create)
         {
             QFile f(filename.c_str());
-            if (f.exists())
-            {
-                if (QMessageBox::warning(this, tr("Confirm file overwrite"), tr("Do you want to overwrite selected file?"), QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Cancel)
-                    return;
-            }
             if (database && filename == database->getFullName())
             {
                 storage.reset();
                 database.reset();
             }
-            if (!f.remove())
+            if (f.exists() && !f.remove())
             {
                 QMessageBox::critical(this, tr("Cannot remove old database file!"), f.errorString());
                 return;
@@ -514,12 +490,10 @@ void MainWindow::loadStorage(bool create)
         return;
     }
 
-    setTitle();
-
     dataChanged = false;
     schemaMm.clear();
-    schema = std::make_shared<Schema>(polygon4::detail::getSchema());
 
+    setTitle();
     reloadTreeView();
 }
 
@@ -573,6 +547,7 @@ void MainWindow::saveDb()
 
 void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
+    using namespace polygon4;
     using namespace polygon4::detail;
 
     tableWidget->setCurrentCell(-1, -1);
@@ -591,7 +566,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     updateText(currentTreeWidgetItem);
 
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-    auto table_name = to_string(polygon4::detail::getTableNameByType(data->type));
+    auto table_name = to_string(data->object->getClass().getCppName());
     auto classes = schema->getClasses();
     auto citer = classes.find(table_name);
     if (citer == classes.end())
@@ -599,7 +574,10 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     auto vars = citer->getVariables();
     tableWidget->setRowCount(vars.size());
     for (size_t i = 0; i < vars.size(); i++)
+    {
         tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
+        tableWidget->setItem(i, 2, nullptr);
+    }
     for (auto &var : vars)
     {
         int col_id = 0;
@@ -610,14 +588,14 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             disabled = true;
 
         // name
-        item = new QTableWidgetItem(getFieldName(var.getSqlName()));
+        item = new QTableWidgetItem(polygon4::tr(var.getName()).toQString());
         item->setFlags(Qt::ItemIsEnabled);
         tableWidget->setItem(var.getId(), col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
         // type
-        item = new QTableWidgetItem(getColumnTypeString(var.getType()->getDataType()));
+        item = new QTableWidgetItem(polygon4::tr(var.getType()->getDataType()).toQString());
         item->setFlags(Qt::NoItemFlags);
         tableWidget->setItem(var.getId(), col_id++, item);
         if (disabled)
@@ -635,8 +613,8 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             }
             else
             {
-                auto table_type = getTableType(citer->getCppName());
-                auto type = getTableType(var.getType()->getCppName());
+                auto table_type = data->object->getType();
+                auto type = data->object->getVariableType(var.getId());
 
                 OrderedObjectMap m;
 
@@ -659,8 +637,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                     for (auto it = m.cbegin(); it != m.cend(); )
                     {
                         polygon4::detail::String *s = (polygon4::detail::String *)it->second;
-                        if (s->table &&
-                            (s->table->getId() != static_cast<int>(table_type) || s->table->getId() == static_cast<int>(EObjectType::Any)))
+                        if (s->object != table_type || s->object == EObjectType::Any)
                         {
                             m.erase(it++);
                         }
@@ -669,13 +646,6 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                             ++it;
                         }
                     }
-                }
-                if (type == EObjectType::Table)
-                {
-                    decltype(m) m2;
-                    for (auto it = m.cbegin(); it != m.cend(); it++)
-                        m2.insert(std::make_pair(getTableName(to_string(it->first)), it->second));
-                    m = m2;
                 }
                 
                 QComboBox *cb = new QComboBox;
@@ -707,6 +677,59 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 });
                 tableWidget->setCellWidget(var.getId(), col_id, cb);
             }
+            continue;
+        }
+
+        if (var.getDataType() == DataType::Bool)
+        {
+            auto chkb = new QCheckBox;
+            chkb->setChecked(value == "1");
+            connect(chkb, &QCheckBox::stateChanged, [chkb, var, data](int state)
+            {
+                data->object->setVariableString(var.getId(), chkb->isChecked() ? "1" : "0");
+            });
+
+            QWidget* wdg = new QWidget;
+            QHBoxLayout layout(wdg);
+            layout.addSpacing(3);
+            layout.addWidget(chkb);
+            layout.setAlignment(Qt::AlignLeft);
+            layout.setMargin(0);
+            wdg->setLayout(&layout);
+
+            tableWidget->setCellWidget(var.getId(), col_id++, wdg);
+            tableWidget->repaint();
+        }
+        else if (var.getDataType() == DataType::Enum)
+        {
+            QComboBox *cb = new QComboBox;
+            auto n = var.getType()->getCppName();
+            int val = std::stoi(to_string(value).c_str());
+            auto m = getOrderedMap(n);
+            bool found = false;
+            for (auto &v : m)
+            {
+                cb->addItem(v.first.toQString(), (uint64_t)v.second);
+                if (val == v.second)
+                {
+                    cb->setCurrentIndex(cb->count() - 1);
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                cb->addItem("");
+                cb->setCurrentIndex(cb->count() - 1);
+            }
+            connect(cb, (void (QComboBox::*)(int))&QComboBox::currentIndexChanged, [cb, var, this](int index)
+            {
+                auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
+                auto cb_data = cb->currentData().toInt();
+                data->object->setVariableString(var.getId(), std::to_string(cb_data));
+                data->name = data->object->getName();
+                currentTreeWidgetItemChanged(currentTreeWidgetItem, 0);
+            });
+            tableWidget->setCellWidget(var.getId(), col_id, cb);
         }
         else
         {
@@ -771,6 +794,7 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
 
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     data->object->setVariableString(currentTableWidgetItem->row(), currentTableWidgetItem->data(Qt::DisplayRole).toString().toStdString());
+    data->name = data->object->getName();
 
     dataChanged = true;
     setTitle();
