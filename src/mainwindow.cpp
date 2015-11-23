@@ -677,10 +677,8 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 });
                 tableWidget->setCellWidget(var.getId(), col_id, cb);
             }
-            continue;
         }
-
-        if (var.getDataType() == DataType::Bool)
+        else if (var.getDataType() == DataType::Bool)
         {
             auto chkb = new QCheckBox;
             chkb->setChecked(value == "1");
