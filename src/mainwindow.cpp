@@ -27,14 +27,9 @@ const int tableWidgetColumnCount = 3;
 
 void setItemText(QTreeWidgetItem *item, const polygon4::String &text)
 {
-    QString t = polygon4::tr(to_string(text).c_str()).toQString();
-    int cc = 0;
-    for (int i = 0; i < item->childCount(); i++)
-    {
-        auto c = item->child(i);
-        if (((polygon4::TreeItem *)c->data(0, Qt::UserRole).toULongLong())->object)
-            cc++;
-    }
+    QString t = polygon4::tr(text).toQString();
+    auto ti = ((polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong());
+    int cc = ti->child_count();
     if (cc)
         t += " [" + QString::number(cc) + "]";
     item->setText(0, t);
@@ -53,6 +48,13 @@ void updateText(QTreeWidgetItem *item, bool no_children = false)
         for (int i = 0; i < item->childCount(); i++)
             updateText(item->child(i));
     }
+}
+
+void updateTextAnParent(QTreeWidgetItem *item)
+{
+    // probably this won't update higher parents
+    updateText(item->parent(), true);
+    updateText(item);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -90,7 +92,6 @@ void MainWindow::createActions()
     connect(saveDbAction, SIGNAL(triggered()), SLOT(saveDb()));
 
     reloadDbAction = new QAction(QIcon(":/icons/reload.png"), 0, this);
-    //connect(reloadDbAction, SIGNAL(triggered()), SLOT(saveDb()));
     connect(reloadDbAction, SIGNAL(triggered()), SLOT(loadStorage()));
 
     addRecordAction = new QAction(QIcon(":/icons/plus.png"), 0, this);
@@ -581,11 +582,10 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     currentTreeWidgetItem = current;
     currentTableWidgetItem = 0;
 
-    updateText(currentTreeWidgetItem->parent(), true);
-    updateText(currentTreeWidgetItem);
+    updateTextAnParent(currentTreeWidgetItem);
 
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-    auto table_name = to_string(data->object->getClass().getCppName());
+    auto table_name = data->object->getClass().getCppName();
     auto classes = schema->getClasses();
     auto citer = classes.find(table_name);
     if (citer == classes.end())
@@ -675,7 +675,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
         else if (var.getDataType() == DataType::Bool)
         {
             auto chkb = new QCheckBox;
-            chkb->setChecked(value == "1");
+            chkb->setChecked(value.toString() == "1");
             connect(chkb, &QCheckBox::stateChanged, [chkb, var, data](int state)
             {
                 data->object->setVariableString(var.getId(), chkb->isChecked() ? "1" : "0");
@@ -696,7 +696,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
         {
             QComboBox *cb = new QComboBox;
             auto n = var.getType()->getCppName();
-            int val = std::stoi(to_string(value).c_str());
+            int val = std::stoi(value);
             auto m = getOrderedMap(n);
             bool found = false;
             for (auto &v : m)
@@ -729,9 +729,11 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             te->setAcceptRichText(false);
             te->setFixedHeight(100);
             te->setPlainText(value.toQString());
-            connect(te, &QTextEdit::textChanged, [te, var, data]()
+            connect(te, &QTextEdit::textChanged, [te, var, data, this]()
             {
-                data->object->setVariableString(var.getId(), te->toPlainText().toStdWString());
+                data->object->setVariableString(var.getId(), te->toPlainText());
+                data->name = data->object->getName();
+                updateTextAnParent(currentTreeWidgetItem);
             });
             tableWidget->setCellWidget(var.getId(), col_id++, te);
             tableWidget->setRowHeight(var.getId(), te->height() + 2);
