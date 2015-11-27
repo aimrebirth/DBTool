@@ -607,7 +607,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             disabled = true;
 
         // name
-        item = new QTableWidgetItem(polygon4::tr(var.getName()).toQString());
+        item = new QTableWidgetItem(polygon4::tr(var.getDisplayName()).toQString());
         item->setFlags(Qt::ItemIsEnabled);
         tableWidget->setItem(var.getId(), col_id++, item);
         if (disabled)
