@@ -79,7 +79,7 @@ private: /* ui functions */
     void createToolBar();
     void setTitle();
     void setTableHeaders();
-    void buildTree(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item);
+    void buildTree(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item, bool recurse = true, int depth = 0);
     QTreeWidgetItem *addItem(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item);
 
 private: /* ui components */

@@ -42,7 +42,7 @@ void updateText(QTreeWidgetItem *item, bool no_children = false)
     if (!item)
         return;
     auto data = (TreeItem *)item->data(0, Qt::UserRole).toULongLong();
-    setItemText(item, data->name);
+    setItemText(item, data->get_name());
     if (!no_children)
     {
         for (int i = 0; i < item->childCount(); i++)
@@ -50,7 +50,7 @@ void updateText(QTreeWidgetItem *item, bool no_children = false)
     }
 }
 
-void updateTextAnParent(QTreeWidgetItem *item)
+void updateTextAndParent(QTreeWidgetItem *item)
 {
     // probably this won't update higher parents
     updateText(item->parent(), true);
@@ -316,6 +316,16 @@ void MainWindow::createWidgets()
     tableWidget->setItemDelegateForColumn(tableWidgetColumnCount - 1, signalledItemDelegate);
 
     connect(treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(currentTreeWidgetItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
+    connect(treeWidget, &QTreeWidget::expanded,  [this](const QModelIndex &index)
+    {
+        if (!index.isValid())
+            return;
+        auto c = (QTreeWidgetItem *)index.internalPointer();
+        if (!c)
+            return;
+        auto data = (polygon4::TreeItem *)c->data(0, Qt::UserRole).toULongLong();
+        buildTree(c, data, false, 0);
+    });
     connect(tableWidget, SIGNAL(itemClicked(QTableWidgetItem *)), SLOT(currentTableWidgetItemChanged(QTableWidgetItem *)));
 
     connect(signalledItemDelegate, SIGNAL(startEditing(QWidget *, const QModelIndex &)), SLOT(tableWidgetStartEdiding(QWidget *, const QModelIndex &)));
@@ -361,18 +371,35 @@ void MainWindow::setTableHeaders()
     tableWidget->setHorizontalHeaderLabels(headers);
 }
 
-void MainWindow::buildTree(QTreeWidgetItem *qitem, polygon4::TreeItem *item)
+void MainWindow::buildTree(QTreeWidgetItem *qitem, polygon4::TreeItem *item, bool recurse, int depth)
 {
-    if (item->children.empty())
+    if (item->children.empty()) // nothing to add
         return;
-    for (auto &c : item->children)
+    if (item->flags[fNoChildren]) // denied to print children
+        return;
+    if (qitem->childCount())
     {
-        auto item = new QTreeWidgetItem(qitem);
-        item->setData(0, Qt::UserRole, (uint64_t)c.get());
-        buildTree(item, c.get());
-        setItemText(item, c->name);
+        // already populated, just build children
+        for (int i = 0; i < qitem->childCount(); i++)
+        {
+            auto qchild = qitem->child(i);
+            auto data = (polygon4::TreeItem *)qchild->data(0, Qt::UserRole).toULongLong();
+            if (recurse || depth <= 0)
+                buildTree(qchild, data, recurse, depth + 1);
+        }
     }
-    qitem->sortChildren(0, Qt::AscendingOrder);
+    else
+    {
+        for (auto &c : item->children)
+        {
+            auto item = new QTreeWidgetItem(qitem);
+            item->setData(0, Qt::UserRole, (uint64_t)c.get());
+            if (recurse || depth <= 0)
+                buildTree(item, c.get(), recurse, depth + 1);
+            setItemText(item, c->get_name());
+        }
+        qitem->sortChildren(0, Qt::AscendingOrder);
+    }
 }
 
 QTreeWidgetItem *MainWindow::addItem(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item)
@@ -528,7 +555,7 @@ void MainWindow::reloadTreeView()
     if (storage)
     {
         tree = storage->printTree();
-        buildTree(treeWidget->invisibleRootItem(), tree.get());
+        buildTree(treeWidget->invisibleRootItem(), tree.get(), false);
     }
 }
 
@@ -582,41 +609,47 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     currentTreeWidgetItem = current;
     currentTableWidgetItem = 0;
 
-    updateTextAnParent(currentTreeWidgetItem);
-
+    updateTextAndParent(currentTreeWidgetItem);
+    
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     auto table_name = data->object->getClass().getCppName();
     auto classes = schema->getClasses();
     auto citer = classes.find(table_name);
     if (citer == classes.end())
         return;
-    auto vars = citer->getVariables();
+    auto vars = citer->getVariables()({ fInline }, true);
+    std::sort(vars.begin(), vars.end(),
+        [](const auto &v1, const auto &v2) { return v1.getId() < v2.getId(); });
     tableWidget->setRowCount(vars.size());
     for (size_t i = 0; i < vars.size(); i++)
     {
         tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
         tableWidget->setItem(i, 2, nullptr);
+        auto h = tableWidget->rowHeight(i);
+        tableWidget->setRowHeight(i, 24);
     }
+    int row_id = -1;
     for (auto &var : vars)
     {
+        row_id++;
         int col_id = 0;
         QTableWidgetItem *item;
 
-        bool disabled = false;
+        bool disabled = data->flags[fReadOnly] ? true : false;
         if (var.isId())
             disabled = true;
 
         // name
         item = new QTableWidgetItem(polygon4::tr(var.getDisplayName()).toQString());
         item->setFlags(Qt::ItemIsEnabled);
-        tableWidget->setItem(var.getId(), col_id++, item);
+        tableWidget->setItem(row_id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
         // type
         item = new QTableWidgetItem(polygon4::tr(var.getType()->getDataType()).toQString());
         item->setFlags(Qt::NoItemFlags);
-        tableWidget->setItem(var.getId(), col_id++, item);
+        tableWidget->setItem(row_id, col_id++, item);
         if (disabled)
             item->setFlags(Qt::NoItemFlags);
 
@@ -628,7 +661,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             {
                 item = new QTableWidgetItem(value.toQString());
                 item->setFlags(Qt::NoItemFlags);
-                tableWidget->setItem(var.getId(), col_id++, item);
+                tableWidget->setItem(row_id, col_id++, item);
             }
             else
             {
@@ -669,7 +702,9 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                         }
                     });
                 }
-                tableWidget->setCellWidget(var.getId(), col_id, cb);
+                if (disabled)
+                    cb->setEnabled(false);
+                tableWidget->setCellWidget(row_id, col_id, cb);
             }
         }
         else if (var.getDataType() == DataType::Bool)
@@ -689,7 +724,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             layout.setMargin(0);
             wdg->setLayout(&layout);
 
-            tableWidget->setCellWidget(var.getId(), col_id++, wdg);
+            tableWidget->setCellWidget(row_id, col_id++, wdg);
             tableWidget->repaint();
         }
         else if (var.getDataType() == DataType::Enum)
@@ -721,7 +756,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
                 data->name = data->object->getName();
                 currentTreeWidgetItemChanged(currentTreeWidgetItem, 0);
             });
-            tableWidget->setCellWidget(var.getId(), col_id, cb);
+            tableWidget->setCellWidget(row_id, col_id, cb);
         }
         else if (var.hasFlags({ fBigEdit }))
         {
@@ -733,16 +768,16 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
             {
                 data->object->setVariableString(var.getId(), te->toPlainText());
                 data->name = data->object->getName();
-                updateTextAnParent(currentTreeWidgetItem);
+                updateTextAndParent(currentTreeWidgetItem);
             });
-            tableWidget->setCellWidget(var.getId(), col_id++, te);
-            tableWidget->setRowHeight(var.getId(), te->height() + 2);
+            tableWidget->setCellWidget(row_id, col_id++, te);
+            tableWidget->setRowHeight(row_id, te->height() + 2);
         }
         else
         {
             item = new QTableWidgetItem(value.toQString());
             item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
-            tableWidget->setItem(var.getId(), col_id++, item);
+            tableWidget->setItem(row_id, col_id++, item);
             item->setData(Qt::UserRole, (uint64_t)schemaMm.create<Variable>(var));
             if (disabled)
                 item->setFlags(Qt::NoItemFlags);
@@ -823,9 +858,13 @@ void MainWindow::addRecord()
             break;
     }
     auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
+    if (data->flags[fReadOnly])
+        return;
+
     auto r = storage->addRecord(data);
     if (!r)
         return;
+
     auto new_item = addItem(item, r.get());
     treeWidget->setCurrentItem(new_item);
     new_item->setExpanded(true);
@@ -840,8 +879,11 @@ void MainWindow::deleteRecord()
     if (!item)
         return;
     auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
+    if (data->flags[fReadOnly])
+        return;
     if (!data || !data->object)
         return;
+
     storage->deleteRecord(data);
     data->remove();
     auto p = item->parent();
