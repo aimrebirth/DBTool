@@ -849,6 +849,12 @@ void MainWindow::addRecord()
     auto item = treeWidget->currentItem();
     if (!item)
         return;
+
+    //
+    // Move this to addRecord()
+    //
+    // in addrecord() switch: break if data->inlineVariable is full
+    //
     while (1)
     {
         auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
@@ -859,6 +865,11 @@ void MainWindow::addRecord()
     }
     auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
     if (data->flags[fReadOnly])
+        return;
+    if (data->type == polygon4::detail::EObjectType::InlineVariables)
+        return;
+    if (data->parent && data->parent->type == polygon4::detail::EObjectType::InlineVariables &&
+        data->inlineVariable)
         return;
 
     auto r = storage->addRecord(data);
@@ -882,6 +893,8 @@ void MainWindow::deleteRecord()
     if (data->flags[fReadOnly])
         return;
     if (!data || !data->object)
+        return;
+    if (data->parent && data->parent->type == polygon4::detail::EObjectType::InlineVariables)
         return;
 
     storage->deleteRecord(data);
