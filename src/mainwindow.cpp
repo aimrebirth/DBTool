@@ -625,7 +625,6 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
         tableWidget->setItem(i, 2, nullptr);
-        auto h = tableWidget->rowHeight(i);
         tableWidget->setRowHeight(i, 24);
     }
     int row_id = -1;
@@ -849,15 +848,11 @@ void MainWindow::addRecord()
     auto item = treeWidget->currentItem();
     if (!item)
         return;
+    
+    auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
 
-    //
-    // Move this to addRecord()
-    //
-    // in addrecord() switch: break if data->inlineVariable is full
-    //
-    while (1)
+    /*while (1)
     {
-        auto data = (polygon4::TreeItem *)item->data(0, Qt::UserRole).toULongLong();
         if ((data && data->object) || data->type == polygon4::detail::EObjectType::None)
             item = item->parent();
         else
@@ -871,7 +866,7 @@ void MainWindow::addRecord()
     if (data->parent && data->parent->type == polygon4::detail::EObjectType::InlineVariables &&
         data->inlineVariable)
         return;
-
+*/
     auto r = storage->addRecord(data);
     if (!r)
         return;
