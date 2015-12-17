@@ -79,8 +79,8 @@ private: /* ui functions */
     void createToolBar();
     void setTitle();
     void setTableHeaders();
-    void buildTree(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item, bool recurse = true, int depth = 0);
-    QTreeWidgetItem *addItem(QTreeWidgetItem *qitem, polygon4::detail::TreeItem *item);
+    void buildTree(polygon4::detail::TreeItem *item, bool recurse = true, int depth = 0);
+    QTreeWidgetItem *addItem(polygon4::detail::TreeItem *item);
 
 private: /* ui components */
     QWidget *centralWidget;
@@ -127,4 +127,10 @@ private: /* data */
     MemoryManager schemaMm;
     bool dataChanged = false;
     std::shared_ptr<polygon4::detail::TreeItem> tree;
+
+    void printVariable(
+            class Variable &var,
+            int &row_id,
+            polygon4::detail::TreeItem *data,
+            const class Class &cls);
 };
