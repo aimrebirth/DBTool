@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setupUi();
-    
+
     setMinimumSize(1000, 600);
     resize(minimumSizeHint());
 }
@@ -77,6 +77,12 @@ void MainWindow::createActions()
 {
     openDbAction = new QAction(QIcon(":/icons/open.png"), 0, this);
     connect(openDbAction, SIGNAL(triggered()), SLOT(openDb()));
+
+    openDbNoLoadAction = new QAction(QIcon(":/icons/open.png"), 0, this);
+    connect(openDbNoLoadAction, &QAction::triggered, [=]
+    {
+        openDb(false, false);
+    });
 
     saveDbAction = new QAction(QIcon(":/icons/save.png"), 0, this);
     connect(saveDbAction, SIGNAL(triggered()), SLOT(saveDb()));
@@ -218,6 +224,7 @@ void MainWindow::createMenus()
     fileMenu->addAction(newDbAction);
     fileMenu->addSeparator();
     fileMenu->addAction(openDbAction);
+    fileMenu->addAction(openDbNoLoadAction);
     fileMenu->addAction(saveDbAction);
     fileMenu->addAction(saveDbAsAction);
     fileMenu->addAction(reloadDbAction);
@@ -320,7 +327,7 @@ void MainWindow::createWidgets()
 
     connect(signalledItemDelegate, SIGNAL(startEditing(QWidget *, const QModelIndex &)), SLOT(tableWidgetStartEdiding(QWidget *, const QModelIndex &)));
     connect(signalledItemDelegate, SIGNAL(endEditing(QWidget *, QAbstractItemModel *, const QModelIndex &)), SLOT(tableWidgetEndEdiding(QWidget *, QAbstractItemModel *, const QModelIndex &)));
-    
+
     dbLabel = new QLabel(this);
 
     statusBar = new QStatusBar(this);
@@ -334,6 +341,7 @@ void MainWindow::retranslateUi()
     fileMenu->setTitle(tr("File"));
     newDbAction->setText(tr("New database..."));
     openDbAction->setText(tr("Open database..."));
+    openDbNoLoadAction->setText(tr("Open database without loading..."));
     saveDbAction->setText(tr("Save database..."));
     saveDbAsAction->setText(tr("Save database as..."));
     reloadDbAction->setText(tr("Reload database..."));
@@ -349,7 +357,7 @@ void MainWindow::retranslateUi()
     loadDbAction->setText(tr("Load json"));
     dumpDbAction->setText(tr("Dump json"));
     dumpDbAction->setIconText(dumpDbAction->text());
-    
+
     setTableHeaders();
     setTitle();
 }
@@ -446,7 +454,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     //event->ignore();
 }
 
-void MainWindow::openDb(bool create)
+void MainWindow::openDb(bool create, bool load)
 {
     std::string filename
 #ifndef NDEBUG
@@ -494,7 +502,8 @@ void MainWindow::openDb(bool create)
         return;
     }
 
-    loadStorage(create);
+    if (load)
+        loadStorage(create);
 }
 
 void MainWindow::loadStorage(bool create)
@@ -770,7 +779,7 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     currentTableWidgetItem = 0;
 
     updateTextAndParent(currentTreeWidgetItem);
-    
+
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
     auto &cls = data->object->getClass();
 
@@ -778,37 +787,14 @@ void MainWindow::currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWid
     std::sort(vars.begin(), vars.end(),
         [](const auto &v1, const auto &v2) { return v1.getId() < v2.getId(); });
 
-    bool inline_var = data->inlineVariable && data->object;
-    int n_additional_vars = 0;
-    if (inline_var)
-        n_additional_vars++;
-
     int row_id = -1;
 
-    tableWidget->setRowCount(vars.size() + n_additional_vars);
-    for (size_t i = 0; i < vars.size() + n_additional_vars; i++)
+    tableWidget->setRowCount(vars.size());
+    for (size_t i = 0; i < vars.size(); i++)
     {
         tableWidget->removeCellWidget(i, tableWidgetColumnCount - 1);
         tableWidget->setItem(i, 2, nullptr);
         tableWidget->setRowHeight(i, 24);
-    }
-
-    if (inline_var)
-    {
-        auto item = data->parent;
-        while (!item->object)
-            item = item->parent;
-        auto &c = item->object->getClass();
-        auto vars2 = c.getVariables();
-        for (auto &v : vars2)
-        {
-            auto p = item->object->getVariable(v.getId());
-            if (p == data->object)
-            {
-                printVariable(v, row_id, data, cls);
-                break;
-            }
-        }
     }
 
     for (auto &var : vars)
@@ -831,7 +817,7 @@ void MainWindow::tableWidgetStartEdiding(QWidget *editor, const QModelIndex &ind
     if (!currentTableWidgetItem)
         return;
 
-    Variable *var = (Variable *)currentTableWidgetItem->data(Qt::UserRole).toULongLong();
+    auto var = (Variable *)currentTableWidgetItem->data(Qt::UserRole).toULongLong();
     if (!var)
         return;
 
@@ -854,7 +840,7 @@ void MainWindow::tableWidgetStartEdiding(QWidget *editor, const QModelIndex &ind
     default:
         break;
     }
-    
+
     QLineEdit *edit = (QLineEdit *)editor;
     edit->setValidator(validator);
 }
@@ -866,8 +852,9 @@ void MainWindow::tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *mode
     if (!currentTreeWidgetItem)
         return;
 
+    auto var = (Variable *)currentTableWidgetItem->data(Qt::UserRole).toULongLong();
     auto data = (TreeItem *)currentTreeWidgetItem->data(0, Qt::UserRole).toULongLong();
-    data->object->setVariableString(currentTableWidgetItem->row(), currentTableWidgetItem->data(Qt::DisplayRole).toString().toStdString());
+    data->object->setVariableString(var->getId(), currentTableWidgetItem->data(Qt::DisplayRole).toString().toStdString());
     data->name = data->object->getName();
 
     dataChanged = true;

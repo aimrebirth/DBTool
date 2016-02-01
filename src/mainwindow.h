@@ -46,15 +46,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
+
 protected:
     void changeEvent(QEvent* event);
     void closeEvent(QCloseEvent *event);
-    
+
 signals:
 private slots:
     void changeLanguage(QAction *action);
-    void openDb(bool create = false);
+    void openDb(bool create = false, bool load = true);
     void saveDb();
     void loadStorage(bool create = false);
     void reloadTreeView();
@@ -68,7 +68,7 @@ private slots:
 private:
     void setupUi();
     void retranslateUi();
-    
+
 private: /* ui functions */
     void createActions();
     void createLanguageMenu();
@@ -97,6 +97,7 @@ private: /* ui components */
     QActionGroup *languageActionGroup;
     QAction *newDbAction;
     QAction *openDbAction;
+    QAction *openDbNoLoadAction;
     QAction *saveDbAction;
     QAction *saveDbAsAction;
     QAction *reloadDbAction;
