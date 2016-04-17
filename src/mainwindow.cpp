@@ -433,12 +433,12 @@ void MainWindow::changeLanguage(QAction *action)
         QApplication::installTranslator(&appTranslator);
         appTranslator.load(language);
         if (language.indexOf("ru") != -1)
-            polygon4::gCurrentLocalizationId = polygon4::LocalizationType::ru;
+            polygon4::getCurrentLocalizationId(polygon4::LocalizationType::ru);
         else if (language.indexOf("en") != -1)
-            polygon4::gCurrentLocalizationId = polygon4::LocalizationType::en;
+            polygon4::getCurrentLocalizationId(polygon4::LocalizationType::en);
     }
     else
-        polygon4::gCurrentLocalizationId = polygon4::LocalizationType::en;
+        polygon4::getCurrentLocalizationId(polygon4::LocalizationType::en);
     reloadTreeView();
 }
 
