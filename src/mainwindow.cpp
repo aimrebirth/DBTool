@@ -738,7 +738,7 @@ void MainWindow::printVariable(
     {
         auto te = new QTextEdit;
         te->setAcceptRichText(false);
-        te->setFixedHeight(100);
+        te->setFixedHeight(200);
         te->setPlainText(value.toQString());
         connect(te, &QTextEdit::textChanged, [te, var, data, this]()
         {
