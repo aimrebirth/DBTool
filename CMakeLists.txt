@@ -38,14 +38,6 @@ set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake Targets")
 
 project(db_tool C CXX)
 
-# libraries and dependencies
-if (WIN32)
-    set(Boost_USE_STATIC_LIBS ON)
-else()
-    ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
-endif(WIN32)
-
-find_package(Boost 1.54 REQUIRED filesystem system)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
@@ -61,9 +53,6 @@ endif()
 #
 ###############################################################################
 
-add_definitions(-DUSE_QT)
-add_definitions(-DPOLYGON4_STATIC)
-
 if (WIN32)
     if (MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
@@ -78,14 +67,9 @@ endif()
 #
 ###############################################################################
 
-link_directories(${Boost_LIBRARY_DIRS})
-
-if (NOT DATA_MANAGER_DIR)
-    message(FATAL_ERROR "Please, set DATA_MANAGER_DIR variable")
-else()
-    get_filename_component(DATA_MANAGER_DIR "${DATA_MANAGER_DIR}" ABSOLUTE)
-    set(DATA_MANAGER_DIR ${DATA_MANAGER_DIR} CACHE STRING "" FORCE)
-endif()
+set(CPPAN_BUILD_SHARED_LIBS 0)
+set(CPPAN_HIDE_LOCAL_DEPENDENCIES 1)
+add_subdirectory(.cppan)
 
 add_subdirectory(src)
 

@@ -12,6 +12,7 @@
 #include <Polygon4/DataManager/Database.h>
 #include <Polygon4/DataManager/Storage.h>
 #include <Polygon4/DataManager/StorageImpl.h>
+#include <Polygon4/DataManager/TreeItem.h>
 #include <Polygon4/DataManager/Types.h>
 
 #include "version.h"

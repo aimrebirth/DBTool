@@ -6,17 +6,19 @@ source_group("MOC files" ".*automoc\\.cpp")
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+add_definitions(-DUSE_QT)
+
 add_custom_target(version ALL
     COMMAND git rev-list HEAD --count > version.h_
     COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h_ ${CMAKE_CURRENT_BINARY_DIR}/version.h.in
 )
-set_target_properties(version PROPERTIES FOLDER Helpers)  
+set_target_properties(version PROPERTIES FOLDER Helpers)
 
 file(GLOB db_tool_src "*.cpp" "*.h")
 
 set(db_tool_src
     ${db_tool_src}
-    
+
     resources/qm.qrc
     resources/rc.qrc
 )
@@ -49,23 +51,19 @@ add_custom_command(
 add_custom_target(translations DEPENDS ${qm_files})
 
 qt5_add_resources(db_tool_resources ${db_tool_rc})
-qt5_add_resources(db_tool_resources_qm ${translations_src})  
+qt5_add_resources(db_tool_resources_qm ${translations_src})
 
 #
 # target
 #
-include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Multimedia_INCLUDE_DIRS})
 
 set(SOLUTION_FOLDER Extern)
-add_subdirectory(${DATA_MANAGER_DIR} DataManager)
-include_directories(${DATA_MANAGER_DIR}/include)
-include_directories(${DATA_MANAGER_ADDITIONAL_INCLUDES})
 
 add_executable(db_tool WIN32 ${db_tool_src} ${MOCSrcs} ${UISrcs} ${db_tool_resources} ${db_tool_resources_qm} resources/res.rc)
-target_link_libraries(db_tool DataManager Qt5::Widgets ${Boost_LIBRARIES})
+target_link_libraries(db_tool Qt5::Widgets data_manager)
 add_dependencies(db_tool translations version)
 set_target_properties(db_tool PROPERTIES AUTOMOC True)
