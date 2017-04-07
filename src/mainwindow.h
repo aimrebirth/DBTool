@@ -1,10 +1,10 @@
 #pragma once
 
-#include <memory>
+#include <Polygon4/DataManager/MemoryManager.h>
 
 #include <QMainWindow>
 
-#include <Polygon4/DataManager/MemoryManager.h>
+#include <memory>
 
 class QWidget;
 class QMenuBar;
@@ -128,6 +128,7 @@ private: /* data */
     MemoryManager schemaMm;
     bool dataChanged = false;
     std::shared_ptr<polygon4::detail::TreeItem> tree;
+	class AppSettings *settings;
 
     void printVariable(
             class Variable &var,

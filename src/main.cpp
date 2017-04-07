@@ -1,8 +1,8 @@
-#include <time.h>
-
 #include "mainwindow.h"
+
 #include <QApplication>
-#include <qglobal.h>
+
+#include <time.h>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -18,7 +18,9 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationName("AimFans");
     QApplication::setOrganizationDomain("aim-fans.ru");
     QApplication::setApplicationName("Polygon 4 DB Tool");
+
     QApplication a(argc, argv);
+
     MainWindow w;
     w.show();
 
@@ -28,6 +30,6 @@ int main(int argc, char *argv[])
 void win32_hacks()
 {
 #ifdef WIN32
-    SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
+    //SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
 #endif
 }

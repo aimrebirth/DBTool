@@ -1,8 +1,11 @@
 #include "mainwindow.h"
 
+#include "appsettings.h"
+
 #include <algorithm>
 #include <assert.h>
 
+#include <qsettings.h>
 #include <QtWidgets>
 
 #include <qapplication.h>
@@ -51,6 +54,8 @@ void updateTextAndParent(QTreeWidgetItem *item)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+	settings = new AppSettings(this);
+
     setupUi();
 
     setMinimumSize(1000, 600);
@@ -72,6 +77,17 @@ void MainWindow::setupUi()
     createLayouts();
 
     retranslateUi();
+
+	auto lang = settings->value("language", "ru");
+	for (auto &a : languageActionGroup->actions())
+	{
+		if (a->data().toString() == lang)
+		{
+			changeLanguage(a);
+			a->setChecked(true);
+			break;
+		}
+	}
 }
 
 void MainWindow::createActions()
@@ -104,7 +120,7 @@ void MainWindow::createActions()
     connect(aboutAction, &QAction::triggered, [=]
     {
         QMessageBox::information(this, tr("Polygon-4 DB Tool"),
-            tr("Author") + ": lzwdgc" + ", 2015\n" + tr("Version") +
+            tr("Author") + ": lzwdgc" + ", 2015-2017\n" + tr("Version") +
             QString(": %1.%2.%3.%4")
             .arg(DBTOOL_VERSION_MAJOR)
             .arg(DBTOOL_VERSION_MINOR)
@@ -437,6 +453,8 @@ void MainWindow::changeLanguage(QAction *action)
             polygon4::getCurrentLocalizationId(polygon4::LocalizationType::ru);
         else if (language.indexOf("en") != -1)
             polygon4::getCurrentLocalizationId(polygon4::LocalizationType::en);
+
+		settings->setValue("language", language);
     }
     else
         polygon4::getCurrentLocalizationId(polygon4::LocalizationType::en);
