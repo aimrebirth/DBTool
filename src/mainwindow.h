@@ -64,6 +64,7 @@ private slots:
     void tableWidgetEndEdiding(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index);
     void addRecord();
     void deleteRecord();
+    void translateStrings();
 
 private:
     void setupUi();
@@ -105,6 +106,7 @@ private: /* ui components */
     QAction *aboutAction;
     QAction *addRecordAction;
     QAction *deleteRecordAction;
+    QAction *translateAction;
 
     QAction *dumpDbAction;
     QAction *loadDbAction;

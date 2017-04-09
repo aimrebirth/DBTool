@@ -18,6 +18,8 @@
 #include <Polygon4/DataManager/TreeItem.h>
 #include <Polygon4/DataManager/Types.h>
 
+#include <primitives/http.h>
+
 #include "version.h"
 
 #include "qlabeledlistwidget.h"
@@ -112,6 +114,9 @@ void MainWindow::createActions()
 
     deleteRecordAction = new QAction(QIcon(":/icons/minus.png"), 0, this);
     connect(deleteRecordAction, SIGNAL(triggered()), SLOT(deleteRecord()));
+
+    translateAction = new QAction(this);
+    connect(translateAction, SIGNAL(triggered()), SLOT(translateStrings()));
 
     exitAction = new QAction(this);
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -254,6 +259,8 @@ void MainWindow::createMenus()
     editMenu->addSeparator();
     editMenu->addAction(dumpDbAction);
     editMenu->addAction(loadDbAction);
+    editMenu->addSeparator();
+    editMenu->addAction(translateAction);
 
     settingsMenu = new QMenu(this);
     settingsMenu->addMenu(languageMenu);
@@ -369,6 +376,7 @@ void MainWindow::retranslateUi()
     languageMenu->setTitle(tr("Language"));
     helpMenu->setTitle(tr("Help"));
     aboutAction->setText(tr("About"));
+    translateAction->setText(tr("Translate strings"));
 
     editMenu->setTitle(tr("Edit"));
     loadDbAction->setText(tr("Load json"));

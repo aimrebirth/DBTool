@@ -64,6 +64,10 @@ include_directories(${Qt5Multimedia_INCLUDE_DIRS})
 set(SOLUTION_FOLDER Extern)
 
 add_executable(db_tool WIN32 ${db_tool_src} ${MOCSrcs} ${UISrcs} ${db_tool_resources} ${db_tool_resources_qm} resources/res.rc)
-target_link_libraries(db_tool Qt5::Widgets pvt.lzwdgc.polygon4.data_manager.data_manager)
+target_link_libraries(db_tool Qt5::Widgets
+    pvt.lzwdgc.polygon4.data_manager.data_manager
+    pvt.egorpugin.primitives.http
+    pvt.egorpugin.primitives.executor
+)
 add_dependencies(db_tool translations version)
 set_target_properties(db_tool PROPERTIES AUTOMOC True)

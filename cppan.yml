@@ -1,3 +1,6 @@
 local_settings:
     dependencies:
         - pvt.lzwdgc.polygon4.data_manager.data_manager: master
+        - pvt.egorpugin.primitives.http: master
+        - pvt.egorpugin.primitives.executor: master
+

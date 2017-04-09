@@ -2,3 +2,4 @@ win*
 *.bat
 /build*
 /.cppan*
+*.lnk
