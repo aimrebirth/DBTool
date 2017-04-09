@@ -93,11 +93,16 @@ struct Translator
 
     Type type = Yandex;
     String key;
-    String from;
-    String to;
+    String source;
+    String target;
 
-    bool translate(const String &from, String &to, String *error = nullptr) const
+    bool translate(const polygon4::String &from, polygon4::String &to, String *error = nullptr) const
     {
+        if (from.empty())
+            return true;
+        if (!to.empty())
+            return true;
+
         switch (type)
         {
         case Yandex:
@@ -105,20 +110,16 @@ struct Translator
         case Google:
             return google(from, to, error);
         }
+        return false;
     }
 
 private:
-    bool yandex(const String &from, String &to, String *error) const
+    bool yandex(const polygon4::String &from, polygon4::String &to, String *error) const
     {
-        if (from.empty())
-            return;
-        if (!to.empty())
-            return;
-
         HttpRequest req = httpSettings;
         req.url = "https://translate.yandex.net/api/v1.5/tr.json/translate"s + "?";
         req.url += "key=" + key + "&";
-        req.url += "lang=" + from + "-" + to + "&";
+        req.url += "lang=" + source + "-" + target + "&";
         req.url += "text=" + form_urlencode(from);
         auto resp = url_request(req);
         auto p = string2ptree(resp.response);
@@ -133,18 +134,13 @@ private:
         return true;
     }
 
-    bool google(const String &from, String &to, String *error) const
+    bool google(const polygon4::String &from, polygon4::String &to, String *error) const
     {
-        if (from.empty())
-            return;
-        if (!to.empty())
-            return;
-
         HttpRequest req = httpSettings;
         req.url = "https://www.googleapis.com/language/translate/v2"s + "?";
         req.url += "key=" + key + "&";
-        req.url += "source=" + from + "&";
-        req.url += "target=" + to + "&";
+        req.url += "source=" + source + "&";
+        req.url += "target=" + target + "&";
         req.url += "q=" + form_urlencode(from);
         auto resp = url_request(req);
         auto p = string2ptree(resp.response);
@@ -154,8 +150,10 @@ private:
                 *error = p.get("error.message", ""s);
             return false;
         }
-        auto t = p.get_child("text");
-        to = t.begin()->second.get_value<String>();
+        auto t = p.get_child("data.translations");
+        to = t.begin()->second.get<String>("translatedText", "");
+        if (iswupper(from.c_str()[0]))
+            ((wchar_t*)to.c_str())[0] = towupper(to.c_str()[0]);
         return true;
     }
 };
@@ -165,10 +163,32 @@ void MainWindow::translateStrings()
     if (!storage)
         return;
 
-    std::atomic_int counter = 0;
-    auto max = storage->strings.size() * (int)polygon4::LocalizationType::max;
+    Translator td;
+    td.type = Translator::Google;
+    td.key = QInputDialog::getText(this, windowTitle(), tr("Enter translate service key")).toStdString();
 
-    const auto key = QInputDialog::getText(this, windowTitle(), tr("Enter translate service key"));
+    Executor e(1, "translator");
+    auto stopped = false;
+    String error;
+    std::atomic_size_t counter = 0;
+    size_t max = 0;
+
+    auto p4tr = [&, &td = td](polygon4::String polygon4::LocalizedString::*from, polygon4::String polygon4::LocalizedString::*to)
+    {
+        for (auto &s : storage->strings)
+        {
+            e.push([&s = s, &stopped, &error, td, &counter, from, to]
+            {
+                counter++;
+                if (stopped)
+                    return;
+                if (!td.translate(s.second->string.*from, s.second->string.*to, &error))
+                    stopped = true;
+            });
+            max++;
+            break;
+        }
+    };
 
     QProgressDialog progress(tr("Translating Strings..."), "Abort", 0, max, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
     progress.setFixedWidth(400);
@@ -176,60 +196,41 @@ void MainWindow::translateStrings()
     progress.setCancelButton(0);
     progress.setValue(0);
     progress.setWindowModality(Qt::WindowModal);
-    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    QApplication::processEvents();
 
-    Executor e(10, "translator");
-    auto stopped = false;
-    String error;
-
-    const String url = u8"https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key.toStdString() +"&";
-    for (auto &s : storage->strings)
+    auto ui_wait = [&]()
     {
-#define ADD_LANGUAGE(language, id)                                                               \
-    e.push([&s = s, &url, &counter, this, &stopped, &error ] {                                   \
-        counter++;                                                                               \
-                                                                                                 \
-        if (s.second->string.ru.empty())                                                         \
-            return;                                                                              \
-        if (!s.second->string.language.empty())                                                  \
-            return;                                                                              \
-        if (stopped)                                                                             \
-            return;                                                                              \
-                                                                                                 \
-        HttpRequest req = httpSettings;                                                          \
-        req.type = HttpRequest::POST;                                                            \
-        req.url = url + "lang=ru-" + #language + "&text=" + form_urlencode(s.second->string.ru); \
-        auto resp = url_request(req);                                                            \
-        auto p = string2ptree(resp.response);                                                    \
-        if (resp.http_code != 200)                                                               \
-        {                                                                                        \
-            auto e = p.get("message", ""s);                                                      \
-            error = e;                                                                           \
-            stopped = true;                                                                      \
-            return;                                                                              \
-        }                                                                                        \
-                                                                                                 \
-        auto t = p.get_child("text");                                                            \
-        auto tr = t.begin()->second.get_value<String>();                                         \
-        s.second->string.language = tr;                                                          \
-    });
-#include <Polygon4/DataManager/Languages.inl>
-    }
-
-    while (counter < max)
-    {
-        progress.setValue(counter);
-        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        if (stopped)
+        while (counter < max)
         {
-            progress.setWindowModality(Qt::NonModal);
-            progress.hide();
-            QMessageBox::information(this, tr("Translation error"), error.c_str());
-            break;
+            progress.setValue(counter);
+            QApplication::processEvents();
+            if (stopped)
+                break;
         }
-    }
+    };
 
+    td.source = "ru";
+    td.target = "en";
+    p4tr(&polygon4::LocalizedString::ru, &polygon4::LocalizedString::en);
+
+    progress.setMaximum(max);
+    ui_wait();
+    e.wait(); // we must fully proceed english strings first
+
+    td.source = "en";
+#define ADD_TRANSLATION(x) td.target = #x; p4tr(&polygon4::LocalizedString::en, &polygon4::LocalizedString::x)
+    ADD_TRANSLATION(de);
+    ADD_TRANSLATION(fr);
+    ADD_TRANSLATION(es);
+    ADD_TRANSLATION(et);
+    ADD_TRANSLATION(cs);
+    ui_wait();
     e.wait();
+
+    progress.hide();
+    QApplication::processEvents();
+    if (stopped)
+        QMessageBox::information(this, tr("Translation error"), error.c_str());
 
     //saveDb();
 }
