@@ -165,7 +165,10 @@ void MainWindow::translateStrings()
 
     Translator td;
     td.type = Translator::Google;
-    td.key = QInputDialog::getText(this, windowTitle(), tr("Enter translate service key")).toStdString();
+    if (td.type == Translator::Google)
+        td.key = QInputDialog::getText(this, windowTitle(), tr("Enter Google translate service key")).toStdString();
+    else if (td.type == Translator::Yandex)
+        td.key = QInputDialog::getText(this, windowTitle(), tr("Enter Yandex translate service key")).toStdString();
 
     Executor e(1, "translator");
     auto stopped = false;
@@ -210,15 +213,8 @@ void MainWindow::translateStrings()
     };
 
     td.source = "ru";
-    td.target = "en";
-    p4tr(&polygon4::LocalizedString::ru, &polygon4::LocalizedString::en);
-
-    progress.setMaximum(max);
-    ui_wait();
-    e.wait(); // we must fully proceed english strings first
-
-    td.source = "en";
-#define ADD_TRANSLATION(x) td.target = #x; p4tr(&polygon4::LocalizedString::en, &polygon4::LocalizedString::x)
+#define ADD_TRANSLATION(x) td.target = #x; p4tr(&polygon4::LocalizedString::ru, &polygon4::LocalizedString::x)
+    ADD_TRANSLATION(en);
     ADD_TRANSLATION(de);
     ADD_TRANSLATION(fr);
     ADD_TRANSLATION(es);
@@ -232,5 +228,5 @@ void MainWindow::translateStrings()
     if (stopped)
         QMessageBox::information(this, tr("Translation error"), error.c_str());
 
-    //saveDb();
+    saveDb();
 }
