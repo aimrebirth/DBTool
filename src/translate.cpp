@@ -96,11 +96,18 @@ struct Translator
     String source;
     String target;
 
-    bool translate(const polygon4::String &from, polygon4::String &to, String *error = nullptr) const
+    bool needsTranslation(const polygon4::String &from, polygon4::String &to) const
     {
         if (from.empty())
-            return true;
+            return false;
         if (!to.empty())
+            return false;
+        return true;
+    }
+
+    bool translate(const polygon4::String &from, polygon4::String &to, String *error = nullptr) const
+    {
+        if (!needsTranslation(from, to))
             return true;
 
         switch (type)
@@ -167,64 +174,73 @@ void MainWindow::translateStrings()
     td.type = Translator::Google;
     if (td.type == Translator::Google)
         td.key = QInputDialog::getText(this, windowTitle(), tr("Enter Google translate service key")).toStdString();
-    else if (td.type == Translator::Yandex)
+    if (td.type == Translator::Yandex || td.key.empty())
+    {
         td.key = QInputDialog::getText(this, windowTitle(), tr("Enter Yandex translate service key")).toStdString();
+        if (!td.key.empty())
+            td.type = Translator::Yandex;
+    }
 
+    // use 1 thread because google api will throw with limit exceeded
     Executor e(1, "translator");
+    e.throw_exceptions = false;
     auto stopped = false;
     String error;
     std::atomic_size_t counter = 0;
     size_t max = 0;
 
-    auto p4tr = [&, &td = td](polygon4::String polygon4::LocalizedString::*from, polygon4::String polygon4::LocalizedString::*to)
     {
-        for (auto &s : storage->strings)
+        QProgressDialog progress(tr("Translating Strings..."), "Abort", 0, max, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+        progress.setFixedWidth(400);
+        progress.setFixedHeight(75);
+        progress.setCancelButton(0);
+        progress.setValue(0);
+        progress.setWindowModality(Qt::WindowModal);
+        QApplication::processEvents();
+
+        auto p4tr = [this, &td, &stopped, &error, &counter, &e, &max]
+            (polygon4::String polygon4::LocalizedString::*from, polygon4::String polygon4::LocalizedString::*to)
         {
-            e.push([&s = s, &stopped, &error, td, &counter, from, to]
+            for (auto &s : storage->strings)
             {
-                counter++;
-                if (stopped)
-                    return;
-                if (!td.translate(s.second->string.*from, s.second->string.*to, &error))
-                    stopped = true;
-            });
-            max++;
-            break;
-        }
-    };
+                if (!td.needsTranslation(s.second->string.*from, s.second->string.*to))
+                    continue;
+                e.push([s = s.second, &stopped, &error, td, &counter, from, to]
+                {
+                    counter++;
+                    if (stopped)
+                        return;
+                    if (!td.translate(s->string.*from, s->string.*to, &error))
+                        stopped = true;
+                });
+                max++;
+            }
+        };
 
-    QProgressDialog progress(tr("Translating Strings..."), "Abort", 0, max, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
-    progress.setFixedWidth(400);
-    progress.setFixedHeight(75);
-    progress.setCancelButton(0);
-    progress.setValue(0);
-    progress.setWindowModality(Qt::WindowModal);
-    QApplication::processEvents();
-
-    auto ui_wait = [&]()
-    {
-        while (counter < max)
+        auto ui_wait = [&counter, &max, &progress, &stopped, &e]()
         {
-            progress.setValue(counter);
-            QApplication::processEvents();
-            if (stopped)
-                break;
-        }
-    };
+            while (counter < max)
+            {
+                progress.setValue(counter);
+                QApplication::processEvents();
+                if (stopped)
+                    break;
+            }
+        };
 
-    td.source = "ru";
-#define ADD_TRANSLATION(x) td.target = #x; p4tr(&polygon4::LocalizedString::ru, &polygon4::LocalizedString::x)
-    ADD_TRANSLATION(en);
-    ADD_TRANSLATION(de);
-    ADD_TRANSLATION(fr);
-    ADD_TRANSLATION(es);
-    ADD_TRANSLATION(et);
-    ADD_TRANSLATION(cs);
-    ui_wait();
-    e.wait();
+        td.source = "ru";
+#define ADD_LANGUAGE(x, n) td.target = #x; p4tr(&polygon4::LocalizedString::ru, &polygon4::LocalizedString::x);
+#include <Polygon4/DataManager/Languages.inl>
+#undef ADD_LANGUAGE
+        progress.setMaximum(max);
+        ui_wait();
+        e.wait();
 
-    progress.hide();
-    QApplication::processEvents();
+        progress.hide();
+        QApplication::processEvents();
+    }
+    // destroy progress! or it won't allow us react on error
+
     if (stopped)
         QMessageBox::information(this, tr("Translation error"), error.c_str());
 
