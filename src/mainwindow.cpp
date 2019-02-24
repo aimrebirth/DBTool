@@ -1,14 +1,7 @@
 #include "mainwindow.h"
 
 #include "appsettings.h"
-
-#include <algorithm>
-#include <assert.h>
-
-#include <qsettings.h>
-#include <QtWidgets>
-
-#include <qapplication.h>
+#include "version.h"
 
 #include <Polygon4/DataManager/Common.h>
 #include <Polygon4/DataManager/Database.h>
@@ -16,13 +9,17 @@
 #include <Polygon4/DataManager/StorageImpl.h>
 #include <Polygon4/DataManager/TreeItem.h>
 #include <Polygon4/DataManager/Types.h>
-
 #include <primitives/http.h>
-
-#include "version.h"
 
 #include "qlabeledlistwidget.h"
 #include "qsignalleditemdelegate.h"
+
+#include <qapplication.h>
+#include <qsettings.h>
+#include <QtWidgets>
+
+#include <algorithm>
+#include <assert.h>
 
 #define ALLOC(x) x = new std::remove_reference<decltype(*x)>::type
 
@@ -122,7 +119,7 @@ void MainWindow::createActions()
     connect(aboutAction, &QAction::triggered, [=]
     {
         QMessageBox::information(this, tr("Polygon-4 DB Tool"),
-            tr("Author") + ": lzwdgc" + ", 2015-2017\n" + tr("Version") +
+            tr("Author") + ": lzwdgc" + ", 2015-2019\n" + tr("Version") +
             QString(": %1.%2.%3.%4")
             .arg(DBTOOL_VERSION_MAJOR)
             .arg(DBTOOL_VERSION_MINOR)
@@ -146,7 +143,7 @@ void MainWindow::createActions()
         auto fn = QFileDialog::getSaveFileName(this, tr("Dump database"), QString(), tr("Json files") + " (*.json)");
         if (fn.isEmpty())
             return;
-        std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\" " + tables.toStdString();
+        std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" + normalize_path(database->getFullName()) + "\" " + tables.toStdString();
         system(cmd.c_str());
     });
 
@@ -158,7 +155,7 @@ void MainWindow::createActions()
         auto fn = QFileDialog::getOpenFileName(this, tr("Load database"), QString(), tr("Json files") + " (*.json)");
         if (fn.isEmpty())
             return;
-        std::string cmd = "python dbmgr.py --load --clear --json \"" + fn.toStdString() + "\" --db \"" + database->getFullName() + "\"";
+        std::string cmd = "python dbmgr.py --load --clear --json \"" + fn.toStdString() + "\" --db \"" + normalize_path(database->getFullName()) + "\"";
         system(cmd.c_str());
         openDb();
     });
@@ -556,7 +553,7 @@ void MainWindow::loadStorage(bool create)
         };
 
         storage->load(f);
-        dbLabel->setText(database->getFullName().c_str());
+        dbLabel->setText(normalize_path(database->getFullName()).c_str());
     }
     catch (std::exception &e)
     {

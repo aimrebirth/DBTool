@@ -2,7 +2,7 @@
 
 #include <Polygon4/DataManager/MemoryManager.h>
 
-#include <QMainWindow>
+#include <qmainwindow.h>
 #include <qtranslator.h>
 
 #include <memory>

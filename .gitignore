@@ -1,4 +1,6 @@
 win*
+.sw
+bin
 *.bat
 /build*
 /.cppan*
