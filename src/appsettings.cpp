@@ -19,7 +19,7 @@ AppSetting::AppSetting(AppSettings *settings, QObject *appSetting, QObject *pare
     if (ns)
     {
         nm = mp.notifySignal();
-        connect(object, "2" + nm.methodSignature(), this, SLOT(onPropertyChanges()));
+        connect(object, QString("2" + nm.methodSignature()).toStdString().c_str(), this, SLOT(onPropertyChanges()));
     }
 }
 

@@ -3,6 +3,7 @@
 #include <Polygon4/DataManager/MemoryManager.h>
 
 #include <QMainWindow>
+#include <qtranslator.h>
 
 #include <memory>
 
@@ -125,12 +126,13 @@ private: /* ui components */
     QSignalledItemDelegate *signalledItemDelegate = 0;
 
 private: /* data */
+    QTranslator appTranslator;
     std::shared_ptr<polygon4::Database> database;
     std::shared_ptr<polygon4::detail::Storage> storage;
     MemoryManager schemaMm;
     bool dataChanged = false;
     std::shared_ptr<polygon4::detail::TreeItem> tree;
-	class AppSettings *settings;
+    class AppSettings *settings;
 
     void printVariable(
             class Variable &var,

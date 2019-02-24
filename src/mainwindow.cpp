@@ -9,7 +9,6 @@
 #include <QtWidgets>
 
 #include <qapplication.h>
-#include <qtranslator.h>
 
 #include <Polygon4/DataManager/Common.h>
 #include <Polygon4/DataManager/Database.h>
@@ -26,8 +25,6 @@
 #include "qsignalleditemdelegate.h"
 
 #define ALLOC(x) x = new std::remove_reference<decltype(*x)>::type
-
-QTranslator appTranslator;
 
 const int tableWidgetColumnCount = 3;
 
@@ -56,7 +53,7 @@ void updateTextAndParent(QTreeWidgetItem *item)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-	settings = new AppSettings(this);
+    settings = new AppSettings(this);
 
     setupUi();
 
@@ -80,16 +77,16 @@ void MainWindow::setupUi()
 
     retranslateUi();
 
-	auto lang = settings->value("language", "ru");
-	for (auto &a : languageActionGroup->actions())
-	{
-		if (a->data().toString() == lang)
-		{
-			changeLanguage(a);
-			a->setChecked(true);
-			break;
-		}
-	}
+    auto lang = settings->value("language", "ru");
+    for (auto &a : languageActionGroup->actions())
+    {
+        if (a->data().toString() == lang)
+        {
+            changeLanguage(a);
+            a->setChecked(true);
+            break;
+        }
+    }
 }
 
 void MainWindow::createActions()
@@ -462,7 +459,7 @@ void MainWindow::changeLanguage(QAction *action)
         else if (language.indexOf("en") != -1)
             polygon4::getCurrentLocalizationId(polygon4::LocalizationType::en);
 
-		settings->setValue("language", language);
+        settings->setValue("language", language);
     }
     else
         polygon4::getCurrentLocalizationId(polygon4::LocalizationType::en);

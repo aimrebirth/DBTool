@@ -183,7 +183,7 @@ void MainWindow::translateStrings()
 
     // use 1 thread because google api will throw with limit exceeded
     Executor e(1, "translator");
-    e.throw_exceptions = false;
+    //e.throw_exceptions = false;
     auto stopped = false;
     String error;
     std::atomic_size_t counter = 0;
