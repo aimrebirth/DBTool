@@ -170,7 +170,7 @@ void MainWindow::createActions()
             return;
         QSettings settings;
         QString dir = settings.value("openDir", ".").toString();
-        QString fn = QFileDialog::getSaveFileName(this, tr("Save file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+        QString fn = QFileDialog::getSaveFileName(this, tr("Save file"), dir, tr("sqlite3 database") + " (*.sqlite *.db)");
         if (fn.isEmpty())
             return;
         QFile f(fn);
@@ -489,9 +489,9 @@ void MainWindow::openDb(bool create, bool load)
         QString dir = settings.value("openDir", ".").toString();
         QString fn;
         if (create)
-            fn = QFileDialog::getSaveFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+            fn = QFileDialog::getSaveFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite *.db)");
         else
-            fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite)");
+            fn = QFileDialog::getOpenFileName(this, tr("Open file"), dir, tr("sqlite3 database") + " (*.sqlite *.db)");
         if (fn == QString())
             return;
         settings.setValue("openDir", QFileInfo(fn).absoluteDir().absolutePath());
