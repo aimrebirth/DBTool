@@ -1,5 +1,4 @@
 #pragma sw require header org.sw.demo.qtproject.qt.base.tools.moc-*
-#pragma sw require header org.sw.demo.qtproject.qt.tools.linguist.release-*
 
 void build(Solution &s)
 {
