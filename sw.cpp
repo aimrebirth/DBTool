@@ -22,10 +22,6 @@ void build(Solution &s)
     DBTool += "pub.egorpugin.primitives.http-master"_dep;
     DBTool += "pub.egorpugin.primitives.executor-master"_dep;
 
-    /*automoc("org.sw.demo.qtproject.qt.base.tools.moc-*"_dep, DBTool);
-    rcc("org.sw.demo.qtproject.qt.base.tools.rcc-*"_dep, t, t.SourceDir / ("resources/" + t.pkg.ppath.back() + ".qrc"));
-    qt_tr("org.sw.demo.qtproject.qt-*"_dep, t);*/
-
     qt_moc_rcc_uic("org.sw.demo.qtproject.qt-*"_dep, DBTool);
     qt_tr("org.sw.demo.qtproject.qt-*"_dep, DBTool);
 
@@ -48,7 +44,7 @@ void build(Solution &s)
             << "rev-list" << "HEAD" << "--count"
             << cmd::std_out("version_gen.h");
 
-        SW_MAKE_EXECUTE_BUILTIN_COMMAND_AND_ADD(c2, DBTool, "sw_copy_file");
+        SW_MAKE_EXECUTE_BUILTIN_COMMAND_AND_ADD(c2, DBTool, "sw_copy_file", nullptr);
         c2->args.push_back(normalize_path(DBTool.BinaryDir / "version_gen.h"));
         c2->args.push_back(normalize_path(DBTool.BinaryDir / "version.h.in"));
         c2->addInput(DBTool.BinaryDir / "version_gen.h");
