@@ -1,4 +1,4 @@
-#pragma sw require header org.sw.demo.qtproject.qt.base.tools.moc-*
+#pragma sw require header org.sw.demo.qtproject.qt.base.tools.moc
 
 void build(Solution &s)
 {
