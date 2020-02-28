@@ -772,7 +772,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="362"/>
         <source>File</source>
-        <translation>Vastus</translation>
+        <translation>Fail</translation>
     </message>
     <message>
         <source>New...</source>
