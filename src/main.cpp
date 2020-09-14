@@ -2,12 +2,6 @@
 
 #include <QApplication>
 
-#ifdef QT_STATIC
-#include <QtPlugin>
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
-#endif
-
 #include <time.h>
 
 #ifdef WIN32

@@ -143,7 +143,8 @@ void MainWindow::createActions()
         auto fn = QFileDialog::getSaveFileName(this, tr("Dump database"), QString(), tr("Json files") + " (*.json)");
         if (fn.isEmpty())
             return;
-        std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" + normalize_path(database->getFullName()) + "\" " + tables.toStdString();
+        std::string cmd = "python dbmgr.py --dump --json \"" + fn.toStdString() + "\" --db \"" +
+            to_string(to_path_string(normalize_path(database->getFullName()))) + "\" " + tables.toStdString();
         system(cmd.c_str());
     });
 
@@ -155,7 +156,8 @@ void MainWindow::createActions()
         auto fn = QFileDialog::getOpenFileName(this, tr("Load database"), QString(), tr("Json files") + " (*.json)");
         if (fn.isEmpty())
             return;
-        std::string cmd = "python dbmgr.py --load --clear --json \"" + fn.toStdString() + "\" --db \"" + normalize_path(database->getFullName()) + "\"";
+        std::string cmd = "python dbmgr.py --load --clear --json \"" + fn.toStdString() + "\" --db \"" +
+            to_string(to_path_string(normalize_path(database->getFullName()))) + "\"";
         system(cmd.c_str());
         openDb();
     });
@@ -553,7 +555,7 @@ void MainWindow::loadStorage(bool create)
         };
 
         storage->load(f);
-        dbLabel->setText(normalize_path(database->getFullName()).c_str());
+        dbLabel->setText(to_printable_string(normalize_path(database->getFullName())).c_str());
     }
     catch (std::exception &e)
     {

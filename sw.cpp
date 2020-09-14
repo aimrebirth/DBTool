@@ -5,7 +5,7 @@ void build(Solution &s)
     auto &DBTool = s.addExecutable("Polygon4.DBTool", "master");
     DBTool += Git("https://github.com/aimrebirth/DBTool", "", "{v}");
 
-    DBTool.CPPVersion = CPPLanguageStandard::CPP17;
+    DBTool += cpp20;
     if (auto L = DBTool.getSelectedTool()->as<VisualStudioLinker*>(); L)
         L->Subsystem = vs::Subsystem::Windows;
 
@@ -32,8 +32,7 @@ void build(Solution &s)
     {
         if (f->skip)
             continue;
-        auto ext = p.extension().u8string();
-        if (ext == ".qm")
+        if (p.extension() == ".qm")
             d.files[p];
     }
     rcc("org.sw.demo.qtproject.qt.base.tools.rcc"_dep, DBTool, d);
@@ -43,12 +42,10 @@ void build(Solution &s)
         c << cmd::prog("git"s)
             << "rev-list" << "HEAD" << "--count"
             << cmd::std_out("version_gen.h");
+    }
 
-        SW_MAKE_EXECUTE_BUILTIN_COMMAND_AND_ADD(c2, DBTool, "sw_copy_file", nullptr);
-        c2->push_back(normalize_path(DBTool.BinaryDir / "version_gen.h"));
-        c2->push_back(normalize_path(DBTool.BinaryDir / "version.h.in"));
-        c2->addInput(DBTool.BinaryDir / "version_gen.h");
-        c2->addOutput(DBTool.BinaryDir / "version.h.in");
-        DBTool += "version.h.in";
+    {
+        auto c = DBTool.addCommand(SW_VISIBLE_BUILTIN_FUNCTION(copy_file));
+        c << cmd::in("version_gen.h") << cmd::out("version.h.in");
     }
 }
