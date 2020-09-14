@@ -119,7 +119,7 @@ void MainWindow::createActions()
     connect(aboutAction, &QAction::triggered, [=]
     {
         QMessageBox::information(this, tr("Polygon-4 DB Tool"),
-            tr("Author") + ": lzwdgc" + ", 2015-2019\n" + tr("Version") +
+            tr("Author") + ": lzwdgc" + ", 2015-2020\n" + tr("Version") +
             QString(": %1.%2.%3.%4")
             .arg(DBTOOL_VERSION_MAJOR)
             .arg(DBTOOL_VERSION_MINOR)
