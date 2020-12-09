@@ -474,7 +474,9 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //event->ignore();
+    if (dataChanged && QMessageBox::warning(this, "Confirm exit",
+        "You have unsaved changes.\nDo you really want to exit?\nAll changes will be lost.", QMessageBox::Ok, QMessageBox::Cancel) != QMessageBox::Ok)
+        event->ignore();
 }
 
 void MainWindow::openDb(bool create, bool load)
@@ -532,6 +534,11 @@ void MainWindow::reloadStorage()
 {
     if (!database)
         return;
+
+    if (dataChanged && QMessageBox::warning(this, "Confirm reload",
+        "You have unsaved changes.\nDo you really want to load data from the database?", QMessageBox::Ok, QMessageBox::Cancel) != QMessageBox::Ok)
+        return;
+
     database = std::make_shared<polygon4::Database>(database->getFullName());
     loadStorage();
 }
