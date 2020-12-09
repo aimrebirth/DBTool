@@ -128,8 +128,8 @@ private: /* ui components */
 
 private: /* data */
     QTranslator appTranslator;
-    std::shared_ptr<polygon4::Database> database;
-    std::shared_ptr<polygon4::detail::Storage> storage;
+    std::unique_ptr<polygon4::Database> database;
+    std::unique_ptr<polygon4::detail::Storage> storage;
     MemoryManager schemaMm;
     bool dataChanged = false;
     std::shared_ptr<polygon4::detail::TreeItem> tree;

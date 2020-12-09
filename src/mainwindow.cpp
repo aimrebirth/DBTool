@@ -181,9 +181,8 @@ void MainWindow::createActions()
             QMessageBox::critical(this, tr("Cannot remove old database file!"), f.errorString());
             return;
         }
-        database = std::make_shared<polygon4::Database>(fn.toStdString());
-        ((polygon4::detail::StorageImpl *)(storage.get()))->setDb(database);
-        storage->create();
+        database = std::make_unique<polygon4::Database>(fn.toStdString());
+        storage->create(*database);
         saveDb();
     });
 }
@@ -518,7 +517,7 @@ void MainWindow::openDb(bool create, bool load)
                 return;
             }
         }
-        database = std::make_shared<polygon4::Database>(filename);
+        database = std::make_unique<polygon4::Database>(filename);
     }
     catch (std::exception &e)
     {
@@ -539,7 +538,7 @@ void MainWindow::reloadStorage()
         "You have unsaved changes.\nDo you really want to load data from the database?", QMessageBox::Ok, QMessageBox::Cancel) != QMessageBox::Ok)
         return;
 
-    database = std::make_shared<polygon4::Database>(database->getFullName());
+    database = std::make_unique<polygon4::Database>(database->getFullName());
     loadStorage();
 }
 
@@ -550,9 +549,9 @@ void MainWindow::loadStorage(bool create)
 
     try
     {
-        storage = polygon4::initStorage(database);
+        storage = polygon4::initStorage();
         if (create)
-            storage->create();
+            storage->create(*database);
 
         QProgressDialog progress(tr("Opening database..."), "Abort", 0, 100, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
         progress.setFixedWidth(400);
@@ -568,7 +567,7 @@ void MainWindow::loadStorage(bool create)
             QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         };
 
-        storage->load(f);
+        storage->load(*database, f);
         dbLabel->setText(to_printable_string(normalize_path(database->getFullName())).c_str());
     }
     catch (std::exception &e)
@@ -624,7 +623,9 @@ void MainWindow::saveDb()
             QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         };
 
-        storage->save(f);
+        storage->save(*database, f);
+        database->save();
+
         dataChanged = false;
         setTitle();
     }
