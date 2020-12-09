@@ -58,6 +58,7 @@ private slots:
     void openDb(bool create = false, bool load = true);
     void saveDb();
     void loadStorage(bool create = false);
+    void reloadStorage();
     void reloadTreeView();
     void currentTreeWidgetItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void currentTableWidgetItemChanged(QTableWidgetItem *item);

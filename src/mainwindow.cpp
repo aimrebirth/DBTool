@@ -101,7 +101,7 @@ void MainWindow::createActions()
     connect(saveDbAction, SIGNAL(triggered()), SLOT(saveDb()));
 
     reloadDbAction = new QAction(QIcon(":/icons/reload.png"), 0, this);
-    connect(reloadDbAction, SIGNAL(triggered()), SLOT(loadStorage()));
+    connect(reloadDbAction, SIGNAL(triggered()), SLOT(reloadStorage()));
 
     addRecordAction = new QAction(QIcon(":/icons/plus.png"), 0, this);
     connect(addRecordAction, SIGNAL(triggered()), SLOT(addRecord()));
@@ -516,8 +516,7 @@ void MainWindow::openDb(bool create, bool load)
                 return;
             }
         }
-        auto db = std::make_shared<polygon4::Database>(filename);
-        database = db;
+        database = std::make_shared<polygon4::Database>(filename);
     }
     catch (std::exception &e)
     {
@@ -527,6 +526,14 @@ void MainWindow::openDb(bool create, bool load)
 
     if (load)
         loadStorage(create);
+}
+
+void MainWindow::reloadStorage()
+{
+    if (!database)
+        return;
+    database = std::make_shared<polygon4::Database>(database->getFullName());
+    loadStorage();
 }
 
 void MainWindow::loadStorage(bool create)
