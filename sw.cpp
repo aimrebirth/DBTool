@@ -1,4 +1,4 @@
-#pragma sw require header org.sw.demo.qtproject.qt.base.tools.moc
+#pragma sw require header org.sw.demo.qtproject.qt.base.tools.moc-5.15.0
 
 void build(Solution &s)
 {
@@ -14,16 +14,16 @@ void build(Solution &s)
     DBTool += "USE_QT"_def;
 
     DBTool += "pub.lzwdgc.Polygon4.DataManager-master"_dep;
-    DBTool += "org.sw.demo.qtproject.qt.base.widgets"_dep;
-    DBTool += "org.sw.demo.qtproject.qt.base.winmain"_dep;
-    DBTool += "org.sw.demo.qtproject.qt.base.plugins.platforms.windows"_dep;
-    DBTool += "org.sw.demo.qtproject.qt.base.plugins.styles.windowsvista"_dep;
+    DBTool += "org.sw.demo.qtproject.qt.base.widgets-5.15.0"_dep;
+    DBTool += "org.sw.demo.qtproject.qt.base.winmain-5.15.0"_dep;
+    DBTool += "org.sw.demo.qtproject.qt.base.plugins.platforms.windows-5.15.0"_dep;
+    DBTool += "org.sw.demo.qtproject.qt.base.plugins.styles.windowsvista-5.15.0"_dep;
 
     DBTool += "pub.egorpugin.primitives.http-master"_dep;
     DBTool += "pub.egorpugin.primitives.executor-master"_dep;
 
-    qt_moc_rcc_uic("org.sw.demo.qtproject.qt"_dep, DBTool);
-    qt_tr("org.sw.demo.qtproject.qt"_dep, DBTool);
+    qt_moc_rcc_uic("org.sw.demo.qtproject.qt-5.15.0"_dep, DBTool);
+    qt_tr("org.sw.demo.qtproject.qt-5.15.0"_dep, DBTool);
 
     RccData d;
     d.prefix = "/ts";
@@ -35,7 +35,7 @@ void build(Solution &s)
         if (p.extension() == ".qm")
             d.files[p];
     }
-    rcc("org.sw.demo.qtproject.qt.base.tools.rcc"_dep, DBTool, d);
+    rcc("org.sw.demo.qtproject.qt.base.tools.rcc-5.15.0"_dep, DBTool, d);
 
     {
         auto c = DBTool.addCommand();
