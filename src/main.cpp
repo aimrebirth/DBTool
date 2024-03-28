@@ -13,7 +13,6 @@ void win32_hacks();
 int main(int argc, char *argv[])
 {
     win32_hacks();
-    qsrand(time(0));
 
     QApplication::setOrganizationName("AimFans");
     QApplication::setOrganizationDomain("aim-fans.ru");

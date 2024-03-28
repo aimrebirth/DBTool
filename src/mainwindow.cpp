@@ -735,7 +735,7 @@ void MainWindow::printVariable(
         layout.addSpacing(3);
         layout.addWidget(chkb);
         layout.setAlignment(Qt::AlignLeft);
-        layout.setMargin(0);
+        layout.setContentsMargins({0,0,0,0});
         wdg->setLayout(&layout);
 
         tableWidget->setCellWidget(row_id, col_id++, wdg);

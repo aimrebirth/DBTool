@@ -371,7 +371,7 @@
         <source>ru</source>
         <translation type="vanished">Русский</translation>
     </message>
-	<message>
+    <message>
         <source>et</source>
         <translation type="vanished">Eesti keel</translation>
     </message>
@@ -770,7 +770,7 @@
         <translation type="vanished">Kõik on korras</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="362"/>
+        <location filename="../src/mainwindow.cpp" line="360"/>
         <source>File</source>
         <translation>Vastus</translation>
     </message>
@@ -787,7 +787,7 @@
         <translation type="vanished">Salvesta</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="369"/>
+        <location filename="../src/mainwindow.cpp" line="367"/>
         <source>Exit</source>
         <oldsource>Exit...</oldsource>
         <translation>Välju</translation>
@@ -801,106 +801,106 @@
         <translation type="vanished">Eemalda</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="378"/>
+        <location filename="../src/mainwindow.cpp" line="376"/>
         <source>Edit</source>
         <translation>Redigeeri</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="176"/>
+        <location filename="../src/mainwindow.cpp" line="175"/>
         <location filename="../src/mainwindow.cpp" line="495"/>
         <location filename="../src/mainwindow.cpp" line="497"/>
         <source>sqlite3 database</source>
         <translation>SQLite 3 andmebaas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="124"/>
-        <location filename="../src/mainwindow.cpp" line="446"/>
+        <location filename="../src/mainwindow.cpp" line="121"/>
+        <location filename="../src/mainwindow.cpp" line="444"/>
         <source>Polygon-4 DB Tool</source>
         <translation>Polügon-4 andmebaasi tööriist</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="125"/>
+        <location filename="../src/mainwindow.cpp" line="122"/>
         <source>Author</source>
         <translation>Autor</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="146"/>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Dump database</source>
         <translation>Väljuta andmebaas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="146"/>
-        <location filename="../src/mainwindow.cpp" line="158"/>
+        <location filename="../src/mainwindow.cpp" line="143"/>
+        <location filename="../src/mainwindow.cpp" line="156"/>
         <source>Json files</source>
         <translation>JSON fail</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="139"/>
+        <location filename="../src/mainwindow.cpp" line="136"/>
         <source>Enter tables to dump. * is for all tables.</source>
         <translation>Sista tabelid, mida väljutada. * on kõikide tabelite jaoks.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="158"/>
+        <location filename="../src/mainwindow.cpp" line="156"/>
         <source>Load database</source>
         <translation>Lae andmebaas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="363"/>
+        <location filename="../src/mainwindow.cpp" line="361"/>
         <source>New database...</source>
         <translation>Uus andmebaas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="364"/>
+        <location filename="../src/mainwindow.cpp" line="362"/>
         <source>Open database...</source>
         <translation>Ava andmebaas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="365"/>
+        <location filename="../src/mainwindow.cpp" line="363"/>
         <source>Open database without loading...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="366"/>
+        <location filename="../src/mainwindow.cpp" line="364"/>
         <source>Save database...</source>
         <translation>Salvesta andmebaas...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="367"/>
+        <location filename="../src/mainwindow.cpp" line="365"/>
         <source>Save database as...</source>
         <translation>Salvesta andmebaas kui...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="368"/>
+        <location filename="../src/mainwindow.cpp" line="366"/>
         <source>Reload database...</source>
         <translation>Taaslae andmebaas...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="370"/>
+        <location filename="../src/mainwindow.cpp" line="368"/>
         <source>Add record</source>
         <translation>Lisa kirje</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="371"/>
+        <location filename="../src/mainwindow.cpp" line="369"/>
         <source>Delete record</source>
         <translation>Eemalda kirje</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="372"/>
+        <location filename="../src/mainwindow.cpp" line="370"/>
         <source>Settings</source>
         <translation>Seaded</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="373"/>
+        <location filename="../src/mainwindow.cpp" line="371"/>
         <source>Language</source>
         <translation>Keel</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="374"/>
+        <location filename="../src/mainwindow.cpp" line="372"/>
         <source>Help</source>
         <translation>Abi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="375"/>
+        <location filename="../src/mainwindow.cpp" line="373"/>
         <source>About</source>
         <translation>Programmist</translation>
     </message>
@@ -921,28 +921,28 @@
         <translation type="vanished">Kas soovite valitud faili üle kirjutada?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="182"/>
+        <location filename="../src/mainwindow.cpp" line="181"/>
         <location filename="../src/mainwindow.cpp" line="516"/>
         <source>Cannot remove old database file!</source>
         <translation>Ei saa vana andmebaasi faili kustutada!</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="376"/>
+        <location filename="../src/mainwindow.cpp" line="374"/>
         <source>Translate strings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="379"/>
+        <location filename="../src/mainwindow.cpp" line="377"/>
         <source>Load json</source>
         <translation>Laeu JSON</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="380"/>
+        <location filename="../src/mainwindow.cpp" line="378"/>
         <source>Dump json</source>
         <translation>Väljuta JSON</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="600"/>
+        <location filename="../src/mainwindow.cpp" line="612"/>
         <source>Saving database...</source>
         <translation>Andmebaasi salvestamine...</translation>
     </message>
@@ -951,12 +951,12 @@
         <translation type="vanished">Välja nimi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="390"/>
+        <location filename="../src/mainwindow.cpp" line="388"/>
         <source>Type</source>
         <translation>Tüüp</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="390"/>
+        <location filename="../src/mainwindow.cpp" line="388"/>
         <source>Value</source>
         <translation>Väärtus</translation>
     </message>
@@ -965,22 +965,22 @@
         <translation type="vanished">Väli</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="390"/>
+        <location filename="../src/mainwindow.cpp" line="388"/>
         <source>Name</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="525"/>
+        <location filename="../src/mainwindow.cpp" line="524"/>
         <source>Critical error while opening database!</source>
         <translation>Viga andmebaasi avamisel!</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="544"/>
+        <location filename="../src/mainwindow.cpp" line="556"/>
         <source>Opening database...</source>
         <translation>Andmebaasi avamine...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="565"/>
+        <location filename="../src/mainwindow.cpp" line="577"/>
         <source>Critical error while loading the storage!</source>
         <translation>Viga andmete laadimisel!</translation>
     </message>
@@ -1053,13 +1053,12 @@
         <translation type="vanished">Küsimuse tüüp</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="125"/>
+        <location filename="../src/mainwindow.cpp" line="122"/>
         <source>Version</source>
         <translation>Versioon</translation>
     </message>
     <message>
         <source>Author: Pugin Egor</source>
-        <translation type="vanished">Autor: Pugin Egor</translation>
         <translation type="vanished">Tõlge ja visuaalid: StReef</translation>
     </message>
     <message>
@@ -1067,12 +1066,12 @@
         <translation type="vanished">Kas soovite kindlasti praeguse jaotise kustutada?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="214"/>
+        <location filename="../src/mainwindow.cpp" line="212"/>
         <source>English</source>
         <translation>Eesti keel</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="220"/>
+        <location filename="../src/mainwindow.cpp" line="218"/>
         <source>Default application language</source>
         <comment>Set this variable to &quot;1&quot; to default choose current language</comment>
         <translation>1</translation>
@@ -1100,7 +1099,7 @@
         <translation type="vanished">Küsimuste fail</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="176"/>
+        <location filename="../src/mainwindow.cpp" line="175"/>
         <source>Save file</source>
         <translation>Salvesta fail</translation>
     </message>

@@ -13,7 +13,7 @@ QLabeledListWidget::QLabeledListWidget(QString label, QWidget *parent)
     QVBoxLayout *l = new QVBoxLayout;
     l->addWidget(this->label);
     l->addWidget(this->list);
-    l->setMargin(0);
+    l->setContentsMargins({0,0,0,0});
     setLayout(l);
 }
 
