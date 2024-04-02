@@ -17,7 +17,7 @@ void build(Solution &s)
     DBTool += "org.sw.demo.qtproject.qt.base.widgets"_dep;
     DBTool += "org.sw.demo.qtproject.qt.base.winmain"_dep;
     DBTool += "org.sw.demo.qtproject.qt.base.plugins.platforms.windows"_dep;
-    DBTool += "org.sw.demo.qtproject.qt.base.plugins.styles.windowsvista"_dep;
+    DBTool += "org.sw.demo.qtproject.qt.base.plugins.styles.modernwindows"_dep;
 
     DBTool += "pub.egorpugin.primitives.http"_dep;
     DBTool += "pub.egorpugin.primitives.executor"_dep;
